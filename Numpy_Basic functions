@@ -1,0 +1,199 @@
+#Convert the following 1-D array with 12 elements into a 2-D array.
+#The outermost dimension will have 4 arrays, each with 3 elements:
+import numpy as np
+
+arr = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+
+newarr = arr.reshape(4, 3)
+
+print(newarr) 
+
+
+
+#Convert the following 1-D array with 12 elements into a 3-D array.
+#The outermost dimension will have 2 arrays that contains 3 arrays, each with 2 elements:
+arr=np.array([1,2,3,4,5,6,7,8,9,10,11,12])
+newArr=arr.reshape(2,3,2)
+print(newArr)
+
+
+#Try converting 1D array with 8 elements to a 2D array with 3 elements in each dimension (will raise an error):
+#arr = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+#newarr = arr.reshape(3, 3)
+#print(newarr) 
+
+print()
+#Check if the returned array is a copy or a view:
+arr = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+print(arr.reshape(2, 4).base) 
+
+
+#.base returns none it means original value of the array
+arr = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+new_arr = arr.reshape(2, 4)
+print(new_arr.base)
+
+print()
+
+#Unknown Dimension
+
+#You are allowed to have one "unknown" dimension.
+
+#Meaning that you do not have to specify an exact number for one of the dimensions in the reshape method.
+
+#Pass -1 as the value, and NumPy will calculate this number for you.
+
+arr = np.array([1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12])
+newarr = arr.reshape(3, -1, 2)
+print(newarr) 
+
+newArr=newarr.reshape(-1) #Flattering an array
+print(newArr)
+
+
+# =========================
+# Iterating Arrays
+# =========================
+
+# Iterating means going through the elements of an array one by one.
+
+# Since NumPy supports multi-dimensional arrays,
+# we can iterate through arrays using Python's for loop.
+
+# If we iterate over a 1-D array,
+# the loop visits each element one at a time.
+
+# Example:
+# Iterate over the elements of the following 1-D array.
+
+# Create a 1-D NumPy array
+arr = np.array([1, 2, 3])
+
+# Iterate through each element and print it
+for x in arr:
+    print(x)
+
+
+
+# =========================
+# Iterating 2-D Arrays
+# =========================
+
+# In a 2-D array, iterating with a for loop
+# goes through each row one by one.
+
+# Example:
+# Iterate over the rows of the following 2-D array.
+
+# Create a 2-D NumPy array
+arr = np.array([[1, 2, 3], [4, 5, 6]])
+
+# Iterate through each row and print it
+for x in arr:
+    print(x)
+    
+
+
+# =========================
+# Iterating 3-D Arrays
+# =========================
+
+# In a 3-D array, iterating with a for loop
+# goes through each 2-D array one by one.
+
+# Example:
+# Iterate over the 2-D arrays of the following 3-D array.
+
+# Create a 3-D NumPy array
+arr = np.array([
+    [[1, 2, 3], [4, 5, 6]],
+    [[7, 8, 9], [10, 11, 12]]
+])
+
+# Iterate through each 2-D array and print it
+for x in arr:
+    print(x)
+    
+    
+
+# =========================
+# Iterate Down to the Scalars
+# =========================
+
+# To get the actual values (called scalars),
+# we need to iterate through each dimension of the array.
+
+# In a 3-D array:
+# - First loop -> Iterates through each 2-D array.
+# - Second loop -> Iterates through each row (1-D array).
+# - Third loop -> Iterates through each scalar (individual value).
+
+# Example:
+# Iterate down to the scalar values.
+
+# Create a 3-D NumPy array
+arr = np.array([
+    [[1, 2, 3], [4, 5, 6]],
+    [[7, 8, 9], [10, 11, 12]]
+])
+
+# Iterate through each dimension until individual values are reached
+for x in arr:
+    for y in arr:
+    	for z in arr:
+        	print(z)
+            
+
+
+# =========================
+# Iterating Arrays Using np.nditer()
+# =========================
+
+# np.nditer() is a NumPy iterator.
+# It automatically iterates through every element (scalar)
+# of an array, no matter how many dimensions it has.
+
+# Unlike nested for loops, np.nditer() does not require
+# you to write a loop for each dimension.
+
+# Example:
+# Iterate through all the elements of the following 3-D array.
+
+# Create a 3-D NumPy array
+arr = np.array([
+    [[1, 2], [3, 4]],
+    [[5, 6], [7, 8]]
+])
+
+# Iterate through each scalar value
+for x in np.nditer(arr):
+    print(x)
+    
+    
+
+
+# =========================
+# Iterating Array with Different Data Types
+# =========================
+
+# We can use the op_dtypes argument in np.nditer()
+# to specify the data type we want while iterating.
+
+# NumPy does NOT change the original array's data type.
+# Instead, it temporarily converts each element during iteration.
+
+# Since this temporary conversion needs extra memory,
+# NumPy uses a buffer.
+
+# To enable this buffer, pass:
+# flags=['buffered']
+
+# Example:
+# Iterate through the array as strings (byte strings).
+
+# Create a NumPy array of integers
+arr = np.array([1, 2, 3])
+
+# Iterate through the array, converting each element to a string
+for x in np.nditer(arr, flags=['buffered'], op_dtypes=['S']):
+    print(x)
