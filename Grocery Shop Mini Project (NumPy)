@@ -1,0 +1,97 @@
+# Grocery Shop Mini Project (NumPy)
+
+This is a simple Python mini project that demonstrates basic NumPy operations using a grocery shop price list.
+
+## Features
+
+* Stores grocery item prices in a NumPy array.
+* Adds 18% GST to each item.
+* Calculates the total bill after GST.
+* Finds the costliest item.
+* Finds the cheapest item.
+* Calculates the average price.
+* Provides a simple menu-driven interface.
+
+## Technologies Used
+
+* Python 3
+* NumPy
+
+## Grocery Items
+
+* Rice – ₹120
+* Oil – ₹180
+* Sugar – ₹55
+* Milk – ₹40
+* Eggs – ₹90
+
+## NumPy Functions Used
+
+* `np.sum()`
+* `np.max()`
+* `np.min()`
+* `np.mean()`
+
+This project is suitable for beginners who are learning Python and NumPy and want to practice array operations through a simple real-world example.
+"""
+Mini Project – Grocery Shop
+
+A grocery shop has sold these items today:
+Rice = ₹120
+Oil = ₹180
+Sugar = ₹55
+Milk = ₹40
+Eggs = ₹90
+Tasks:
+1.	Store prices in a NumPy array. 
+2.	Add 18% GST to every item. 
+3.	Calculate the total bill after GST. 
+4.	Find the costliest item. 
+5.	Find the cheapest item. 
+6.	Calculate the average price. 
+Hint:
+Use
+np.sum()
+np.max()
+np.min()
+np.mean()
+"""
+import numpy as np
+
+# Store prices in a NumPy array
+products = np.array([120, 180, 55, 40, 90])
+
+# Add 18% GST
+gst_products = products + (products * 0.18)
+
+while True:
+    print("\n1. Total Bill")
+    print("2. Costliest Item")
+    print("3. Cheapest Item")
+    print("4. Average Price")
+    print("5. Exit")
+
+    ch = input("Enter your choice: ")
+
+    if ch == '5':
+        print("Thanks for using")
+        break
+
+    elif ch == '1':
+        total = np.sum(gst_products)
+        print("Total Bill after GST = ₹", total)
+
+    elif ch == '2':
+        costliest = np.max(gst_products)
+        print("Costliest Item = ₹", costliest)
+
+    elif ch == '3':
+        cheapest = np.min(gst_products)
+        print("Cheapest Item = ₹", cheapest)
+
+    elif ch == '4':
+        average = np.mean(gst_products)
+        print("Average Price = ₹", average)
+
+    else:
+        print("Invalid choice")
