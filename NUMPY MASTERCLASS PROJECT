@@ -1,0 +1,438 @@
+"""
+================================================================================
+ NUMPY MASTERCLASS PROJECT
+ A complete, runnable guide to NumPy arrays: attributes, methods, and functions
+ Every section answers: WHAT it does, WHY it exists, WHEN to use it.
+================================================================================
+Run this file section by section (or all at once) to see live output.
+    python3 numpy_project.py
+================================================================================
+"""
+
+import numpy as np
+
+
+def section(title):
+    print("\n" + "=" * 80)
+    print(title)
+    print("=" * 80)
+
+
+# ==============================================================================
+# 1. WHY NUMPY EXISTS
+# ==============================================================================
+section("1. WHY NUMPY? (Python lists vs NumPy arrays)")
+"""
+WHAT: NumPy (Numerical Python) gives us the `ndarray` — a fixed-type,
+      contiguous-memory array object.
+WHY:  Python lists are flexible but slow and memory-heavy because each
+      element is a separate Python object (with type info, ref count, etc.).
+      NumPy stores raw numbers in one contiguous memory block and operates
+      on them using pre-compiled C code -> 10x-100x faster, less memory.
+WHEN: Use NumPy whenever you deal with numeric/scientific data, math,
+      statistics, image/signal processing, ML, or any bulk numeric
+      computation instead of Python `for` loops over lists.
+"""
+
+py_list = list(range(1_000_000))
+np_array = np.arange(1_000_000)
+
+import time
+t0 = time.time()
+py_result = [x * 2 for x in py_list]
+t1 = time.time()
+np_result = np_array * 2
+t2 = time.time()
+
+print(f"Pure Python list comprehension time: {t1 - t0:.5f} sec")
+print(f"NumPy vectorized operation time   : {t2 - t1:.5f} sec")
+print("-> NumPy wins because it uses vectorization (SIMD/C loops), not Python loops.")
+
+
+# ==============================================================================
+# 2. ARRAY CREATION
+# ==============================================================================
+section("2. ARRAY CREATION FUNCTIONS")
+"""
+WHAT: Multiple ways to build an ndarray.
+WHY:  Different situations need different starting points — from raw data,
+      placeholders, ranges, or special matrices.
+WHEN: Pick based on what you already have (a list? need zeros? need a range?).
+"""
+
+a1 = np.array([1, 2, 3, 4])                  # from a Python list -> WHEN: you already have data
+a2 = np.array([[1, 2], [3, 4]])              # 2D array (matrix)
+a3 = np.zeros((2, 3))                        # WHEN: need a placeholder array of 0s (e.g. init weights/accumulators)
+a4 = np.ones((3, 3))                         # WHEN: need a placeholder of 1s (e.g. multiplicative identity base)
+a5 = np.full((2, 2), 7)                      # WHEN: need a constant-filled array
+a6 = np.empty((2, 2))                        # WHEN: need fast allocation, will overwrite values immediately (uninitialized/garbage memory - risky!)
+a7 = np.arange(0, 10, 2)                     # WHEN: need evenly spaced ints/floats by STEP SIZE (like Python range)
+a8 = np.linspace(0, 1, 5)                    # WHEN: need N evenly spaced points between two values (e.g. plotting x-axis)
+a9 = np.eye(3)                                # WHEN: need an identity matrix (linear algebra, e.g. solving equations)
+a10 = np.identity(3)                          # same as eye for square case
+a11 = np.diag([1, 2, 3])                      # WHEN: need a diagonal matrix from a list of values
+a12 = np.random.rand(2, 2)                    # WHEN: need random floats in [0,1) - uniform distribution
+a13 = np.random.randn(2, 2)                   # WHEN: need random floats from standard normal distribution
+a14 = np.random.randint(0, 10, (2, 3))        # WHEN: need random integers in a range
+a15 = np.zeros_like(a2)                       # WHEN: need zeros with SAME shape/dtype as existing array
+a16 = np.ones_like(a2)                        # same idea but filled with 1
+a17 = np.full_like(a2, 9)                     # same idea but filled with a constant
+
+print("np.array from list:\n", a1)
+print("np.array 2D:\n", a2)
+print("np.zeros((2,3)):\n", a3)
+print("np.ones((3,3)):\n", a4)
+print("np.full((2,2),7):\n", a5)
+print("np.arange(0,10,2):", a7)
+print("np.linspace(0,1,5):", a8)
+print("np.eye(3):\n", a9)
+print("np.diag([1,2,3]):\n", a11)
+print("np.random.randint example:\n", a14)
+
+
+# ==============================================================================
+# 3. ARRAY ATTRIBUTES
+# ==============================================================================
+section("3. ARRAY ATTRIBUTES (properties, not methods - no parentheses)")
+"""
+WHAT: Attributes describe an array's metadata - shape, size, memory layout.
+WHY:  Before operating on data you often need to know its dimensions/type
+      to write correct code (e.g. matching shapes for matrix multiply).
+WHEN: Use them constantly for debugging, validation, and writing
+      shape-agnostic reusable code.
+"""
+
+arr = np.array([[1, 2, 3], [4, 5, 6]])
+
+print("arr:\n", arr)
+print("arr.ndim     :", arr.ndim, " -> number of dimensions/axes")
+print("arr.shape    :", arr.shape, " -> tuple of length along each dimension")
+print("arr.size     :", arr.size, " -> total number of elements (product of shape)")
+print("arr.dtype    :", arr.dtype, " -> data type of elements (int64, float32, etc.)")
+print("arr.itemsize :", arr.itemsize, " -> bytes consumed by ONE element")
+print("arr.nbytes   :", arr.nbytes, " -> total bytes consumed by all elements (itemsize*size)")
+print("arr.T        :\n", arr.T, " -> transposed view (rows<->columns)")
+print("arr.flat     :", list(arr.flat), " -> 1D iterator over all elements")
+print("arr.data     :", arr.data, " -> buffer object pointing to raw memory (rarely used directly)")
+print("arr.flags    :\n", arr.flags, " -> memory layout info (C-contig, F-contig, owns data, writeable)")
+
+# WHY dtype matters: choosing the smallest sufficient dtype saves huge memory at scale
+small = np.array([1, 2, 3], dtype=np.int8)
+big = np.array([1, 2, 3], dtype=np.int64)
+print(f"\nint8 array nbytes: {small.nbytes} vs int64 array nbytes: {big.nbytes}")
+print("-> WHEN working with millions of rows (e.g. images, ML datasets), pick tight dtypes to save RAM.")
+
+
+# ==============================================================================
+# 4. RESHAPING & MANIPULATION METHODS
+# ==============================================================================
+section("4. RESHAPING & MANIPULATION METHODS")
+"""
+WHAT: Change an array's shape/dimensions/arrangement, without necessarily
+      changing its data.
+WHY:  Data often arrives in one shape (e.g. flat list) but algorithms need
+      another (e.g. a matrix, a batch of images, a column vector).
+WHEN: Any time input shape != required shape for the next computation/API.
+"""
+
+base = np.arange(12)
+print("base:", base)
+
+r1 = base.reshape(3, 4)                 # WHAT: reinterpret data in new shape (same total elements)
+print("reshape(3,4):\n", r1, "\n-> WHEN converting flat data into a matrix/tensor form")
+
+r2 = base.reshape(3, -1)                # -1 tells NumPy to auto-calculate that dimension
+print("reshape(3,-1) auto dim:\n", r2)
+
+r3 = r1.flatten()                       # WHAT: returns a 1D COPY of the array
+print("flatten():", r3, "-> WHEN you need a 1D copy and want to safely modify it without affecting original")
+
+r4 = r1.ravel()                         # WHAT: returns a 1D VIEW (no copy, if possible) - faster
+print("ravel():", r4, "-> WHEN you need a 1D version fast and don't need it independent from original")
+
+r5 = r1.T                               # transpose (swap axes)
+print("transpose (.T):\n", r5)
+
+r6 = np.transpose(r1, axes=(1, 0))      # explicit axes control (useful for >2D tensors)
+print("np.transpose with axes:\n", r6)
+
+r7 = np.swapaxes(r1, 0, 1)              # WHAT: swap two specific axes (useful for 3D+ arrays, e.g. images)
+print("swapaxes(0,1):\n", r7)
+
+r8 = r1.resize(2, 6)                    # WHAT: reshape IN-PLACE, can change total size (pads with 0/truncates)
+print("resize(2,6) in-place:\n", r1, "-> WHEN you want to permanently alter array shape/size without new variable")
+
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+print("\nconcatenate:", np.concatenate([a, b]), "-> WHEN joining arrays along an EXISTING axis")
+print("stack       :\n", np.stack([a, b]), "-> WHEN joining arrays along a NEW axis (creates higher dimension)")
+print("vstack      :\n", np.vstack([a, b]), "-> WHEN stacking rows vertically (2D result)")
+print("hstack      :", np.hstack([a, b]), "-> WHEN stacking horizontally (same axis as concatenate for 1D)")
+print("column_stack:\n", np.column_stack([a, b]), "-> WHEN turning 1D arrays into columns of a 2D array")
+
+split_arr = np.arange(9)
+print("\nsplit into 3:", np.split(split_arr, 3), "-> WHEN dividing an array into N EQUAL parts")
+print("array_split(4):", np.array_split(np.arange(10), 3), "-> WHEN dividing into N parts that need NOT be equal")
+
+print("\nexpand_dims:", np.expand_dims(a, axis=0).shape, "-> WHEN you need to add a dimension (e.g. batch dim for ML)")
+print("squeeze:", np.array([[[1, 2, 3]]]).squeeze().shape, "-> WHEN removing dimensions of size 1")
+
+
+# ==============================================================================
+# 5. INDEXING & SLICING
+# ==============================================================================
+section("5. INDEXING & SLICING")
+"""
+WHAT: Ways to access/select elements or sub-arrays.
+WHY:  Real work needs specific rows/columns/conditions, not the whole array.
+WHEN: Basic slicing for contiguous ranges; fancy/boolean indexing for
+      scattered or conditional selection.
+"""
+
+m = np.arange(1, 26).reshape(5, 5)
+print("matrix:\n", m)
+
+print("\nBasic indexing m[1,2]     :", m[1, 2], "-> single element at row1,col2")
+print("Row slice m[1]            :", m[1], "-> WHEN you need an entire row")
+print("Column slice m[:,2]       :", m[:, 2], "-> WHEN you need an entire column")
+print("Sub-matrix m[1:3, 2:4]    :\n", m[1:3, 2:4], "-> WHEN you need a rectangular block")
+print("Reverse m[::-1]           :\n", m[::-1], "-> WHEN reversing row order (step = -1)")
+
+# Fancy indexing - select using lists/arrays of indices (NOT contiguous)
+idx = [0, 2, 4]
+print("\nFancy indexing m[idx]     :\n", m[idx], "-> WHEN selecting arbitrary/non-contiguous rows")
+print("Fancy m[idx, idx]         :", m[idx, idx], "-> WHEN selecting specific (row,col) pairs")
+
+# Boolean indexing / masking - select using a condition
+mask = m % 2 == 0
+print("\nBoolean mask (m%2==0):\n", mask)
+print("m[mask] (even numbers)    :", m[mask], "-> WHEN filtering elements by a CONDITION, very common in data cleaning")
+
+m[m > 20] = 0   # assignment via boolean mask
+print("After m[m>20]=0:\n", m, "-> WHEN you need to REPLACE values matching a condition")
+
+
+# ==============================================================================
+# 6. ARITHMETIC & UNIVERSAL FUNCTIONS (ufuncs)
+# ==============================================================================
+section("6. ARITHMETIC OPERATIONS & UFUNCS")
+"""
+WHAT: Element-wise math operations, executed in compiled C loops (ufuncs).
+WHY:  Avoids explicit Python loops - the core reason NumPy is fast.
+WHEN: Any elementwise math: physics simulations, normalizing data,
+      applying formulas across a dataset, etc.
+"""
+
+x = np.array([1, 2, 3, 4])
+y = np.array([10, 20, 30, 40])
+
+print("x + y  :", x + y, "  (or np.add(x,y))")
+print("x - y  :", x - y, "  (np.subtract)")
+print("x * y  :", x * y, "  (np.multiply)  -> element-wise, NOT matrix multiply")
+print("x / y  :", x / y, "  (np.divide)")
+print("x ** 2 :", x ** 2, "  (np.power)")
+print("x % 3  :", x % 3, "  (np.mod)")
+print("np.sqrt(x)  :", np.sqrt(x), "-> WHEN needing square roots elementwise")
+print("np.exp(x)   :", np.exp(x), "-> WHEN needing e^x, e.g. softmax/growth models")
+print("np.log(x)   :", np.log(x), "-> WHEN needing natural log, e.g. log-loss, entropy")
+print("np.abs(-x)  :", np.abs(-x), "-> WHEN needing absolute values")
+print("np.round(x/3,2):", np.round(x / 3, 2), "-> WHEN rounding to N decimal places for display/precision")
+print("np.sin(x)   :", np.sin(x), "-> WHEN doing trigonometry/signal processing")
+
+
+# ==============================================================================
+# 7. STATISTICAL / AGGREGATE METHODS
+# ==============================================================================
+section("7. STATISTICAL / AGGREGATE METHODS")
+"""
+WHAT: Reduce an array to summary statistics (whole array or along an axis).
+WHY:  Core of data analysis - understanding data through summaries.
+WHEN: EDA (exploratory data analysis), normalizing data, comparing datasets.
+      Use `axis` parameter to control ROW-wise (axis=1) vs COLUMN-wise (axis=0).
+"""
+
+data = np.array([[1, 2, 3], [4, 5, 6]])
+print("data:\n", data)
+
+print("\nsum()        :", data.sum(), "-> total of all elements")
+print("sum(axis=0)  :", data.sum(axis=0), "-> WHEN summing DOWN each column")
+print("sum(axis=1)  :", data.sum(axis=1), "-> WHEN summing ACROSS each row")
+print("mean()       :", data.mean(), "-> average value, WHEN measuring central tendency")
+print("median()     :", np.median(data), "-> WHEN data has outliers (median is robust, mean is not)")
+print("std()        :", data.std(), "-> standard deviation, WHEN measuring spread/variability")
+print("var()        :", data.var(), "-> variance (std squared)")
+print("min() / max():", data.min(), "/", data.max(), "-> WHEN finding extremes")
+print("argmin()/argmax():", data.argmin(), "/", data.argmax(), "-> WHEN you need the INDEX of the extreme, not the value")
+print("cumsum()     :", data.cumsum(), "-> running total, WHEN tracking cumulative growth (e.g. running balance)")
+print("cumprod()    :", data.cumprod(), "-> running product, WHEN compounding values (e.g. compound interest)")
+print("np.percentile(data,90):", np.percentile(data, 90), "-> WHEN you need a specific percentile (e.g. SLA/latency p90)")
+print("np.ptp(data) :", np.ptp(data), "-> peak-to-peak (max-min), WHEN measuring range quickly")
+print("all() any()  :", (data > 0).all(), (data > 5).any(), "-> WHEN checking if ALL/ANY elements satisfy a condition")
+print("np.unique()  :", np.unique(np.array([1, 1, 2, 2, 3])), "-> WHEN removing duplicates / finding distinct categories")
+counts = np.unique(np.array([1, 1, 2, 2, 3]), return_counts=True)
+print("np.unique(return_counts=True):", counts, "-> WHEN you need a frequency count, like value_counts()")
+
+
+# ==============================================================================
+# 8. SORTING & SEARCHING
+# ==============================================================================
+section("8. SORTING & SEARCHING")
+"""
+WHAT: Order elements or locate values/positions matching a condition.
+WHY:  Ranking, top-N queries, and conditional lookups are everywhere.
+WHEN: sort() for order; argsort() when you need the ORIGINAL index order;
+      where()/nonzero() for conditional searches.
+"""
+
+s = np.array([3, 1, 4, 1, 5, 9, 2, 6])
+print("original     :", s)
+print("np.sort(s)   :", np.sort(s), "-> returns a SORTED COPY")
+print("s.sort()     :", (s.sort(), s)[1], "-> sorts IN-PLACE (modifies original, saves memory)")
+
+s2 = np.array([3, 1, 4, 1, 5])
+print("\nargsort(s2)  :", np.argsort(s2), "-> WHEN you need indices that WOULD sort the array (keep track of original order)")
+print("s2[argsort]  :", s2[np.argsort(s2)])
+
+print("\nwhere(s2>2)  :", np.where(s2 > 2), "-> returns INDICES where condition is True")
+print("where as if-else:", np.where(s2 > 2, "big", "small"), "-> WHEN doing vectorized if-else replacement")
+print("nonzero()    :", np.nonzero(s2), "-> WHEN finding indices of all non-zero (or True) entries")
+print("searchsorted :", np.searchsorted(np.sort(s2), 3), "-> WHEN inserting into a SORTED array efficiently (binary search)")
+
+
+# ==============================================================================
+# 9. LINEAR ALGEBRA
+# ==============================================================================
+section("9. LINEAR ALGEBRA (np.linalg + matrix ops)")
+"""
+WHAT: Matrix-specific operations - different from element-wise math.
+WHY:  Needed for ML (weights*inputs), graphics, physics, optimization,
+      solving systems of equations.
+WHEN: Whenever "matrix multiply", "solve for x", "invert", or
+      "eigenvalues" comes up - NOT the same as `*` (which is element-wise).
+"""
+
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[5, 6], [7, 8]])
+
+print("A @ B (matmul)     :\n", A @ B, "-> WHEN doing TRUE matrix multiplication (rows . columns)")
+print("np.dot(A,B)        :\n", np.dot(A, B), "-> same result, alternate syntax; also works for vector dot product")
+print("np.linalg.det(A)   :", np.linalg.det(A), "-> determinant, WHEN checking if a matrix is invertible (non-zero)")
+print("np.linalg.inv(A)   :\n", np.linalg.inv(A), "-> WHEN solving linear systems / reversing a transform")
+print("np.linalg.eig(A)   :", np.linalg.eig(A), "-> eigenvalues/vectors, WHEN doing PCA, stability analysis, etc.")
+
+coeffs = np.array([[3, 1], [1, 2]])
+consts = np.array([9, 8])
+solution = np.linalg.solve(coeffs, consts)
+print("np.linalg.solve()  :", solution, "-> WHEN solving Ax=b directly (faster/more stable than computing inverse)")
+
+v = np.array([3, 4])
+print("np.linalg.norm(v)  :", np.linalg.norm(v), "-> vector magnitude/length, WHEN measuring distance (Euclidean norm)")
+
+
+# ==============================================================================
+# 10. BROADCASTING
+# ==============================================================================
+section("10. BROADCASTING")
+"""
+WHAT: NumPy's rule that lets arrays of DIFFERENT shapes be combined in
+      arithmetic, by virtually "stretching" the smaller one.
+WHY:  Avoids manually tiling/repeating data to match shapes -> saves
+      memory and is much faster.
+WHEN: Combining a matrix with a row/column vector or scalar - e.g.
+      normalizing each row by subtracting its mean.
+"""
+
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+row_vector = np.array([10, 20, 30])
+scalar = 100
+
+print("matrix + row_vector (broadcast row across all rows):\n", matrix + row_vector)
+print("\nmatrix + scalar (broadcast single value everywhere):\n", matrix + scalar)
+
+row_means = matrix.mean(axis=1, keepdims=True)   # keepdims preserves shape for correct broadcasting
+print("\nrow means (keepdims=True) shape:", row_means.shape)
+print("matrix - row_means (mean-centering each row):\n", matrix - row_means)
+print("-> WHEN normalizing data per-row/column without writing manual loops")
+
+
+# ==============================================================================
+# 11. COPY vs VIEW (a common source of bugs!)
+# ==============================================================================
+section("11. COPY vs VIEW")
+"""
+WHAT: A VIEW shares memory with the original array (changes affect both).
+      A COPY is fully independent memory.
+WHY:  Views are memory-efficient and fast, but can cause SURPRISING bugs
+      if you think you have independent data and you don't.
+WHEN: Use view (slicing, reshape, ravel) when you want speed and don't
+      need independence. Use .copy() explicitly when you need to modify
+      data safely without touching the original.
+"""
+
+original = np.array([1, 2, 3, 4, 5])
+view = original[1:4]          # slicing creates a VIEW
+copy = original[1:4].copy()   # .copy() forces independent memory
+
+view[0] = 999
+print("After modifying view, original also changes:", original, "-> view shares memory!")
+
+original2 = np.array([1, 2, 3, 4, 5])
+copy2 = original2[1:4].copy()
+copy2[0] = 999
+print("After modifying copy, original is untouched :", original2, "-> copy is independent")
+
+print("\narr.base is None means it OWNS its data (not a view):")
+print("original.base :", original.base)
+print("view.base     :", view.base is original, "-> True means 'view' is indeed a view of 'original'")
+
+
+# ==============================================================================
+# 12. SAVING & LOADING (Array I/O)
+# ==============================================================================
+section("12. SAVING & LOADING ARRAYS (persistence)")
+"""
+WHAT: Functions to write arrays to disk and read them back.
+WHY:  Data/results need to persist across program runs or be shared with
+      other tools (Excel, pandas, other scripts).
+WHEN: .npy/.npz for fast NumPy-native binary storage (WHEN working purely
+      in Python/NumPy); .txt/.csv for human-readable / cross-tool sharing.
+"""
+
+sample = np.array([[1, 2, 3], [4, 5, 6]])
+
+np.save("/tmp/sample.npy", sample)                       # WHAT: save single array in NumPy's own binary format
+loaded = np.load("/tmp/sample.npy")                       # WHAT: load it back
+print("np.save/np.load (.npy binary)   :\n", loaded, "-> WHEN you need fast, exact round-trip storage of one array")
+
+np.savez("/tmp/multi.npz", a=sample, b=sample * 2)        # WHAT: save MULTIPLE named arrays in one file
+loaded_multi = np.load("/tmp/multi.npz")
+print("np.savez (.npz multi-array)     :", dict(loaded_multi).keys(), "-> WHEN bundling several related arrays together")
+
+np.savetxt("/tmp/sample.csv", sample, delimiter=",", fmt="%d")   # WHAT: save as human-readable text/CSV
+loaded_txt = np.loadtxt("/tmp/sample.csv", delimiter=",")
+print("np.savetxt/np.loadtxt (.csv)    :\n", loaded_txt, "-> WHEN you need a format readable by Excel/other tools")
+
+
+# ==============================================================================
+# SUMMARY
+# ==============================================================================
+section("PROJECT COMPLETE - QUICK REFERENCE SUMMARY")
+print("""
+1. Creation      : array, zeros, ones, full, arange, linspace, eye, random.*
+2. Attributes    : ndim, shape, size, dtype, itemsize, nbytes, T, flags
+3. Reshaping     : reshape, flatten, ravel, transpose, swapaxes, resize,
+                   concatenate, stack, vstack, hstack, split, expand_dims, squeeze
+4. Indexing      : basic slicing, fancy indexing, boolean masking
+5. Math (ufuncs) : +,-,*,/,**, sqrt, exp, log, abs, round, sin/cos
+6. Statistics    : sum, mean, median, std, var, min/max, argmin/argmax,
+                   cumsum, cumprod, percentile, unique
+7. Sort/Search   : sort, argsort, where, nonzero, searchsorted
+8. Linear Algebra: @ / dot, linalg.det, linalg.inv, linalg.eig, linalg.solve, linalg.norm
+9. Broadcasting  : combine different shapes without manual loops
+10. Copy vs View : slicing=view (shared memory), .copy()=independent
+11. Persistence  : save/load (.npy), savez (.npz), savetxt/loadtxt (.csv)
+
+RULE OF THUMB: If you're writing a Python `for` loop over array elements,
+stop and ask "is there a NumPy vectorized function for this?" - there
+almost always is, and it will be dramatically faster.
+""")
