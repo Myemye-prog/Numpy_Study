@@ -1,0 +1,1386 @@
+"""
+================================================================================
+ NUMPY: ONE FUNCTION PER METHOD/ATTRIBUTE
+ Every NumPy attribute/method gets its OWN Python function so you can study,
+ call, and experiment with ONE thing at a time.
+
+ Each function follows the same template:
+    - Docstring: WHAT it does, WHY it exists, WHEN to use it
+    - A small demo printed to the console
+    - Returns the result (so you can inspect it yourself too)
+
+ Run this whole file:      python3 numpy_functions_project.py
+ Or import just one piece: from numpy_functions_project import f_reshape
+================================================================================
+"""
+
+import numpy as np
+
+
+def header(title):
+    print("\n" + "-" * 78)
+    print(title)
+    print("-" * 78)
+
+
+# ==============================================================================
+# CATEGORY 1: ARRAY CREATION FUNCTIONS
+# ==============================================================================
+
+def f_array():
+    """
+    np.array()
+    WHAT : Builds an ndarray from an existing Python list/tuple.
+    WHY  : It's the most direct way to turn data you already have into NumPy's
+           fast, contiguous-memory format.
+    WHEN : Use whenever you already have raw data in a Python list/tuple/nested
+           list and want NumPy's speed and vectorized operations on it.
+    """
+    header("f_array() -> np.array()")
+    result = np.array([1, 2, 3, 4, 5])
+    print("Input list  : [1, 2, 3, 4, 5]")
+    print("np.array()  :", result)
+    return result
+
+
+def f_zeros():
+    """
+    np.zeros(shape)
+    WHAT : Creates an array filled entirely with 0.
+    WHY  : Many algorithms need a "starting point" of nothing before
+           accumulating values into it (counters, sums, initial weights).
+    WHEN : Use when you need a placeholder array to fill in later, e.g.
+           initializing a result matrix before a loop writes into it.
+    """
+    header("f_zeros() -> np.zeros()")
+    result = np.zeros((2, 3))
+    print("np.zeros((2,3)):\n", result)
+    return result
+
+
+def f_ones():
+    """
+    np.ones(shape)
+    WHAT : Creates an array filled entirely with 1.
+    WHY  : Useful as a multiplicative base, or as a "mask" of all-true values.
+    WHEN : Use for initializing weights, building constant matrices, or
+           creating a starting mask array of all-included values.
+    """
+    header("f_ones() -> np.ones()")
+    result = np.one((3, 3))
+    print("np.ones((3,3)):\n", result)
+    return result
+
+
+def f_full():
+    """
+    np.full(shape, fill_value)
+    WHAT : Creates an array of given shape filled with a CUSTOM constant.
+    WHY  : zeros/ones only give 0 or 1 - sometimes you need any other constant.
+    WHEN : Use when you need to pre-fill an array with a specific default,
+           e.g. filling a "not yet computed" sentinel value like -1.
+    """
+    header("f_full() -> np.full()")
+    result = np.full((2, 2), 7)
+    print("np.full((2,2), 7):\n", result)
+    return result
+
+
+def f_empty():
+    """
+    np.empty(shape)
+    WHAT : Allocates array memory WITHOUT initializing values (contains
+           whatever garbage was already in memory).
+    WHY  : Skipping initialization makes allocation slightly faster than
+           zeros/ones/full.
+    WHEN : Use ONLY when you will immediately overwrite every element
+           yourself right after. Risky otherwise - values are unpredictable.
+    """
+    header("f_empty() -> np.empty()")
+    result = np.empty((2, 2))
+    print("np.empty((2,2)) [uninitialized/garbage values]:\n", result)
+    return result
+
+
+def f_arange():
+    """
+    np.arange(start, stop, step)
+    WHAT : Creates evenly spaced values based on a STEP SIZE (like Python's
+           built-in range(), but returns an ndarray and supports floats).
+    WHY  : Quick way to generate sequences of numbers for indexing, loops,
+           or plotting axes.
+    WHEN : Use when you know the STEP SIZE you want between values.
+    """
+    header("f_arange() -> np.arange()")
+    result = np.arange(0, 10, 2)
+    print("np.arange(0, 10, 2):", result)
+    return result
+
+
+def f_linspace():
+    """
+    np.linspace(start, stop, num)
+    WHAT : Creates a specific COUNT of evenly spaced values between two
+           endpoints (inclusive of both ends by default).
+    WHY  : Unlike arange (step-based), linspace guarantees an exact NUMBER
+           of points - important when the exact count matters more than
+           the gap size.
+    WHEN : Use for plotting (e.g. "give me 100 x-values from 0 to 1") or any
+           time you need N samples spanning a range exactly.
+    """
+    header("f_linspace() -> np.linspace()")
+    result = np.linspace(0, 1, 5)
+    print("np.linspace(0, 1, 5):", result)
+    return result
+
+
+def f_eye():
+    """
+    np.eye(n)
+    WHAT : Creates an n x n identity matrix (1s on the diagonal, 0 elsewhere).
+    WHY  : The identity matrix is the "do nothing" element for matrix
+           multiplication (like the number 1 for regular multiplication).
+    WHEN : Use in linear algebra - solving equations, initializing
+           transformation matrices, testing matrix inverses.
+    """
+    header("f_eye() -> np.eye()")
+    result = np.eye(4)
+    print("np.eye(4):\n", result)
+    return result
+
+
+def f_diag():
+    """
+    np.diag(values)
+    WHAT : Builds a matrix with the given values on the diagonal (rest zero).
+           If given a 2D matrix instead, it EXTRACTS the diagonal values.
+    WHY  : Diagonal matrices are common in linear algebra (e.g. scaling
+           transforms, covariance matrices).
+    WHEN : Use to build a diagonal matrix from a list, OR to pull out just
+           the diagonal elements of an existing matrix.
+    """
+    header("f_diag() -> np.diag()")
+    result = np.diag([1, 2, 3])
+    print("np.diag([1,2,3]) -> build matrix:\n", result)
+    extracted = np.diag(result)
+    print("np.diag(matrix) -> extract diagonal:", extracted)
+    return result
+
+
+def f_random_rand():
+    """
+    np.random.rand(shape)
+    WHAT : Generates random floats uniformly distributed in [0, 1).
+    WHY  : Uniform randomness is needed for simulations, random sampling,
+           shuffling, or initializing values with no particular bias.
+    WHEN : Use when every value in the range should be equally likely
+           (e.g. randomly initializing probabilities, dropout masks).
+    """
+    header("f_random_rand() -> np.random.rand()")
+    np.random.seed(42)
+    result = np.random.rand(2, 2)
+    print("np.random.rand(2,2):\n", result)
+    return result
+
+
+def f_random_randn():
+    """
+    np.random.randn(shape)
+    WHAT : Generates random floats from a STANDARD NORMAL (Gaussian, mean=0,
+           std=1) distribution.
+    WHY  : Many real-world phenomena (noise, errors, natural variation)
+           follow a normal distribution, not a uniform one.
+    WHEN : Use when initializing neural network weights, simulating natural
+           noise, or generating test data that should cluster around a mean.
+    """
+    header("f_random_randn() -> np.random.randn()")
+    np.random.seed(42)
+    result = np.random.randn(2, 2)
+    print("np.random.randn(2,2):\n", result)
+    return result
+
+
+def f_random_randint():
+    """
+    np.random.randint(low, high, size)
+    WHAT : Generates random INTEGERS in the range [low, high).
+    WHY  : Uniform random floats aren't useful when you need whole numbers
+           (e.g. dice rolls, random indices, categorical labels).
+    WHEN : Use for simulating discrete random events or picking random
+           indices/categories.
+    """
+    header("f_random_randint() -> np.random.randint()")
+    np.random.seed(42)
+    result = np.random.randint(0, 10, (2, 3))
+    print("np.random.randint(0, 10, (2,3)):\n", result)
+    return result
+
+
+def f_zeros_like():
+    """
+    np.zeros_like(existing_array)
+    WHAT : Creates a new zero-filled array with the SAME shape and dtype as
+           an existing array.
+    WHY  : Saves you from manually reading .shape and .dtype and typing them
+           into np.zeros() yourself - less error-prone.
+    WHEN : Use when you need a "blank slate" that must exactly match another
+           array's shape (e.g. an accumulator matching your data's shape).
+    """
+    header("f_zeros_like() -> np.zeros_like()")
+    original = np.array([[1, 2], [3, 4]])
+    result = np.zeros_like(original)
+    print("original:\n", original)
+    print("np.zeros_like(original):\n", result)
+    return result
+
+
+# ==============================================================================
+# CATEGORY 2: ARRAY ATTRIBUTES (properties - accessed WITHOUT parentheses)
+# ==============================================================================
+
+def f_ndim():
+    """
+    arr.ndim
+    WHAT : Returns the number of dimensions (axes) of the array.
+    WHY  : Code that processes arrays often needs to know whether it's
+           handling a 1D vector, 2D matrix, or higher-dimensional tensor.
+    WHEN : Use for validation/debugging - e.g. asserting a function received
+           a 2D matrix and not accidentally a 1D vector.
+    """
+    header("f_ndim() -> arr.ndim")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    print("arr:\n", arr)
+    print("arr.ndim:", arr.ndim, "-> 2 axes (rows and columns)")
+    return arr.ndim
+
+
+def f_shape():
+    """
+    arr.shape
+    WHAT : Returns a tuple giving the size along each dimension.
+    WHY  : The single most commonly checked attribute - almost every bug in
+           array code traces back to a shape mismatch.
+    WHEN : Use constantly, especially before matrix multiplication,
+           broadcasting, or reshaping, to confirm shapes line up.
+    """
+    header("f_shape() -> arr.shape")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    print("arr:\n", arr)
+    print("arr.shape:", arr.shape, "-> 2 rows, 3 columns")
+    return arr.shape
+
+
+def f_size():
+    """
+    arr.size
+    WHAT : Returns the TOTAL number of elements (product of all dimensions).
+    WHY  : Useful for quick sanity checks (e.g. confirming reshape math will
+           work, since reshape requires the same total element count).
+    WHEN : Use when you need a single number for "how much data is here",
+           e.g. before allocating memory or looping.
+    """
+    header("f_size() -> arr.size")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    print("arr:\n", arr)
+    print("arr.size:", arr.size, "-> 2*3 = 6 total elements")
+    return arr.size
+
+
+def f_dtype():
+    """
+    arr.dtype
+    WHAT : Returns the data type of the array's elements (e.g. int64,
+           float32, bool).
+    WHY  : NumPy arrays are FIXED-TYPE (unlike Python lists) - knowing the
+           dtype tells you precision, memory usage, and what operations
+           are valid.
+    WHEN : Use when debugging unexpected results (e.g. integer division
+           truncation) or when memory/precision matters.
+    """
+    header("f_dtype() -> arr.dtype")
+    arr = np.array([1, 2, 3])
+    arr_float = np.array([1.0, 2.0, 3.0])
+    print("np.array([1,2,3]).dtype       :", arr.dtype)
+    print("np.array([1.0,2.0,3.0]).dtype :", arr_float.dtype)
+    return arr.dtype
+
+
+def f_itemsize():
+    """
+    arr.itemsize
+    WHAT : Returns the number of BYTES used by a single element.
+    WHY  : Helps you understand and control memory footprint at the
+           per-element level, especially when choosing dtypes.
+    WHEN : Use when optimizing memory for large arrays (e.g. choosing
+           int8 vs int64 for millions of rows).
+    """
+    header("f_itemsize() -> arr.itemsize")
+    arr_int8 = np.array([1, 2, 3], dtype=np.int8)
+    arr_int64 = np.array([1, 2, 3], dtype=np.int64)
+    print("int8  itemsize:", arr_int8.itemsize, "bytes per element")
+    print("int64 itemsize:", arr_int64.itemsize, "bytes per element")
+    return arr_int64.itemsize
+
+
+def f_nbytes():
+    """
+    arr.nbytes
+    WHAT : Returns the TOTAL bytes consumed by all elements (itemsize * size).
+    WHY  : Gives you the real memory cost of an array, which matters a lot
+           for big datasets (images, ML data, etc.).
+    WHEN : Use when checking if a dataset will fit in available RAM before
+           loading it entirely, or comparing dtype memory trade-offs.
+    """
+    header("f_nbytes() -> arr.nbytes")
+    arr = np.zeros((1000, 1000), dtype=np.float64)
+    print("Array shape:", arr.shape, "dtype:", arr.dtype)
+    print("arr.nbytes:", arr.nbytes, "bytes (~", arr.nbytes / 1e6, "MB )")
+    return arr.nbytes
+
+
+def f_T():
+    """
+    arr.T
+    WHAT : Returns the TRANSPOSE of the array (rows become columns).
+    WHY  : Many linear algebra operations require swapping row/column
+           orientation (e.g. matching shapes for matrix multiplication).
+    WHEN : Use when you need to flip a matrix's orientation, e.g. converting
+           a row vector to a column vector, or aligning shapes for @ (matmul).
+    """
+    header("f_T() -> arr.T")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    print("arr:\n", arr)
+    print("arr.T (transposed):\n", arr.T)
+    return arr.T
+
+
+def f_flat():
+    """
+    arr.flat
+    WHAT : Returns a 1D ITERATOR over all elements, regardless of the
+           array's actual dimensionality.
+    WHY  : Sometimes you just want to loop through every value once,
+           without caring about the original shape.
+    WHEN : Use when you need simple element-by-element iteration over an
+           N-dimensional array without manually nesting loops.
+    """
+    header("f_flat() -> arr.flat")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    print("arr:\n", arr)
+    result = list(arr.flat)
+    print("list(arr.flat):", result, "-> iterates all elements as if 1D")
+    return result
+
+
+def f_flags():
+    """
+    arr.flags
+    WHAT : Returns memory-layout metadata: whether the array is C-contiguous,
+           Fortran-contiguous, owns its own data, and is writeable.
+    WHY  : Some low-level operations (interfacing with C libraries, certain
+           performance optimizations) need contiguous memory to work fast.
+    WHEN : Use when debugging performance issues or interfacing NumPy with
+           other libraries that require specific memory layouts.
+    """
+    header("f_flags() -> arr.flags")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    print("arr.flags:\n", arr.flags)
+    return arr.flags
+
+
+def f_base():
+    """
+    arr.base
+    WHAT : Returns the original array this array is a VIEW of (or None if
+           this array owns its own data / is not a view).
+    WHY  : Helps you determine whether modifying this array will silently
+           affect another array that shares its memory.
+    WHEN : Use when debugging unexpected "the original data changed!" bugs
+           caused by views sharing memory (see the copy-vs-view section).
+    """
+    header("f_base() -> arr.base")
+    original = np.array([1, 2, 3, 4, 5])
+    view = original[1:4]
+    print("original.base:", original.base, "-> None means it owns its data")
+    print("view.base is original:", view.base is original, "-> True means view shares memory with original")
+    return view.base
+
+
+# ==============================================================================
+# CATEGORY 3: RESHAPING & MANIPULATION METHODS
+# ==============================================================================
+
+def f_reshape():
+    """
+    arr.reshape(new_shape)
+    WHAT : Returns the SAME data rearranged into a new shape (total element
+           count must stay the same).
+    WHY  : Data commonly arrives flat (e.g. a list of numbers) but algorithms
+           need it structured as a matrix/tensor.
+    WHEN : Use whenever the shape you have doesn't match the shape you need
+           for the next computation. Use -1 for a dimension to auto-calculate.
+    """
+    header("f_reshape() -> arr.reshape()")
+    arr = np.arange(12)
+    print("original:", arr)
+    result = arr.reshape(3, 4)
+    print("reshape(3,4):\n", result)
+    return result
+
+
+def f_flatten():
+    """
+    arr.flatten()
+    WHAT : Returns a 1D COPY of the array (fully independent memory).
+    WHY  : Sometimes you need a flat 1D version but must be free to modify
+           it without affecting the original multi-dimensional array.
+    WHEN : Use when you need a safe, independent 1D copy - e.g. before
+           passing to a function that might mutate its input.
+    """
+    header("f_flatten() -> arr.flatten()")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    result = arr.flatten()
+    result[0] = 999
+    print("original (unaffected by change to flatten copy):\n", arr)
+    print("flattened copy (modified):", result)
+    return result
+
+
+def f_ravel():
+    """
+    arr.ravel()
+    WHAT : Returns a 1D VIEW of the array whenever possible (no memory copy).
+    WHY  : Much faster than flatten() because it avoids copying data -
+           but that means changes can propagate back to the original.
+    WHEN : Use when you need a 1D version quickly and don't need it to be
+           independent from the source array.
+    """
+    header("f_ravel() -> arr.ravel()")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    result = arr.ravel()
+    result[0] = 999
+    print("original (CHANGED because ravel is a view):\n", arr)
+    print("raveled view:", result)
+    return result
+
+
+def f_transpose():
+    """
+    np.transpose(arr, axes)
+    WHAT : Permutes an array's axes in any order you specify (generalizes
+           .T, which only reverses all axes).
+    WHY  : For 3D+ arrays (e.g. image batches: [batch, height, width]),
+           you often need to reorder axes in a specific, non-reversed way.
+    WHEN : Use for tensors with 3+ dimensions where simple .T isn't enough
+           (e.g. converting between "channels-first" and "channels-last").
+    """
+    header("f_transpose() -> np.transpose()")
+    arr = np.arange(24).reshape(2, 3, 4)
+    print("original shape:", arr.shape)
+    result = np.transpose(arr, axes=(1, 0, 2))
+    print("transposed shape (axes swapped 0<->1):", result.shape)
+    return result
+
+
+def f_swapaxes():
+    """
+    np.swapaxes(arr, axis1, axis2)
+    WHAT : Swaps exactly TWO specified axes, leaving others untouched.
+    WHY  : Simpler and more explicit than transpose() when you only need
+           to swap two particular axes (e.g. rows/cols of one sub-tensor).
+    WHEN : Use for quick two-axis swaps, common in image/tensor processing.
+    """
+    header("f_swapaxes() -> np.swapaxes()")
+    arr = np.arange(12).reshape(3, 4)
+    print("original:\n", arr)
+    result = np.swapaxes(arr, 0, 1)
+    print("swapaxes(0,1):\n", result)
+    return result
+
+
+def f_resize():
+    """
+    arr.resize(new_shape)
+    WHAT : Changes the array's shape IN-PLACE, and unlike reshape(), it CAN
+           change the total number of elements (padding with 0s or
+           truncating as needed).
+    WHY  : reshape() requires matching element counts; resize() doesn't -
+           useful when you need to grow/shrink an array's total size.
+    WHEN : Use when you want to permanently resize an array in memory,
+           accepting that data may be truncated or zero-padded.
+    """
+    header("f_resize() -> arr.resize()")
+    arr = np.array([1, 2, 3, 4])
+    print("original:", arr)
+    arr.resize(2, 3)
+    print("after resize(2,3) [padded with 0]:\n", arr)
+    return arr
+
+
+def f_concatenate():
+    """
+    np.concatenate([arr1, arr2], axis)
+    WHAT : Joins a sequence of arrays along an EXISTING axis.
+    WHY  : Combining datasets collected separately (e.g. batches, or rows
+           from multiple sources) into a single array is a very common need.
+    WHEN : Use when arrays already share the same number of dimensions and
+           you just need to extend one axis (e.g. adding more rows).
+    """
+    header("f_concatenate() -> np.concatenate()")
+    a = np.array([1, 2, 3])
+    b = np.array([4, 5, 6])
+    result = np.concatenate([a, b])
+    print("concatenate([1,2,3],[4,5,6]):", result)
+    return result
+
+
+def f_stack():
+    """
+    np.stack([arr1, arr2], axis)
+    WHAT : Joins arrays along a NEW axis, increasing dimensionality by 1.
+    WHY  : Unlike concatenate (which extends an existing axis), stack
+           creates a new dimension - useful for grouping equal-shaped
+           arrays as a "batch".
+    WHEN : Use when combining several same-shaped arrays into one higher
+           dimensional array, e.g. stacking multiple images into a batch.
+    """
+    header("f_stack() -> np.stack()")
+    a = np.array([1, 2, 3])
+    b = np.array([4, 5, 6])
+    result = np.stack([a, b])
+    print("stack([1,2,3],[4,5,6]):\n", result, "shape:", result.shape)
+    return result
+
+
+def f_vstack():
+    """
+    np.vstack([arr1, arr2])
+    WHAT : Stacks arrays vertically (row-wise), producing more rows.
+    WHY  : Common shorthand for combining 1D arrays into a 2D matrix, or
+           adding new rows to an existing matrix.
+    WHEN : Use when you want each input array to become a ROW in the result.
+    """
+    header("f_vstack() -> np.vstack()")
+    a = np.array([1, 2, 3])
+    b = np.array([4, 5, 6])
+    result = np.vstack([a, b])
+    print("vstack([1,2,3],[4,5,6]):\n", result)
+    return result
+
+
+def f_hstack():
+    """
+    np.hstack([arr1, arr2])
+    WHAT : Stacks arrays horizontally (side by side / column-wise for 2D).
+    WHY  : Common shorthand for extending an array's width, or joining
+           1D arrays end-to-end.
+    WHEN : Use when you want arrays joined along their length/width rather
+           than stacked as new rows.
+    """
+    header("f_hstack() -> np.hstack()")
+    a = np.array([1, 2, 3])
+    b = np.array([4, 5, 6])
+    result = np.hstack([a, b])
+    print("hstack([1,2,3],[4,5,6]):", result)
+    return result
+
+
+def f_split():
+    """
+    np.split(arr, n)
+    WHAT : Divides an array into n EQUAL-sized parts (raises an error if it
+           can't split evenly).
+    WHY  : Useful for breaking a dataset into equal batches/folds/chunks.
+    WHEN : Use when you know the array divides evenly into the number of
+           parts you want (e.g. splitting data into k equal folds).
+    """
+    header("f_split() -> np.split()")
+    arr = np.arange(9)
+    result = np.split(arr, 3)
+    print("np.split(arange(9), 3):", result)
+    return result
+
+
+def f_expand_dims():
+    """
+    np.expand_dims(arr, axis)
+    WHAT : Inserts a new axis of size 1 at the given position.
+    WHY  : Many APIs (especially ML frameworks) expect a specific number of
+           dimensions, e.g. a "batch" dimension even for a single sample.
+    WHEN : Use when a function expects more dimensions than your data
+           currently has, e.g. turning a single image into a "batch of 1".
+    """
+    header("f_expand_dims() -> np.expand_dims()")
+    arr = np.array([1, 2, 3])
+    result = np.expand_dims(arr, axis=0)
+    print("original shape:", arr.shape, "-> after expand_dims(axis=0):", result.shape)
+    return result
+
+
+def f_squeeze():
+    """
+    arr.squeeze()
+    WHAT : Removes all dimensions of size 1 from an array's shape.
+    WHY  : Extra size-1 dimensions (often left over from earlier operations)
+           can clutter shapes and complicate downstream code.
+    WHEN : Use to clean up an array's shape after operations that leave
+           behind unnecessary size-1 axes.
+    """
+    header("f_squeeze() -> arr.squeeze()")
+    arr = np.array([[[1, 2, 3]]])
+    print("original shape:", arr.shape)
+    result = arr.squeeze()
+    print("after squeeze() shape:", result.shape, "value:", result)
+    return result
+
+
+# ==============================================================================
+# CATEGORY 4: INDEXING & SLICING
+# ==============================================================================
+
+def f_basic_slicing():
+    """
+    arr[start:stop:step] / arr[row, col]
+    WHAT : Selects a contiguous range or single element using start:stop:step
+           syntax (same idea as Python list slicing, but works per-axis).
+    WHY  : The most common and fastest way to grab a sub-section of data.
+    WHEN : Use when the elements you want are CONTIGUOUS (a range of rows,
+           columns, or a rectangular block).
+    """
+    header("f_basic_slicing() -> arr[start:stop:step]")
+    arr = np.arange(1, 26).reshape(5, 5)
+    print("arr:\n", arr)
+    print("arr[1, 2]      :", arr[1, 2], "-> single element at row 1, col 2")
+    print("arr[1]         :", arr[1], "-> entire row 1")
+    print("arr[:, 2]      :", arr[:, 2], "-> entire column 2")
+    print("arr[1:3, 2:4]  :\n", arr[1:3, 2:4], "-> rectangular block")
+    return arr[1:3, 2:4]
+
+
+def f_fancy_indexing():
+    """
+    arr[[i, j, k]]
+    WHAT : Selects elements using a LIST/array of indices, which need not
+           be contiguous or in order.
+    WHY  : Basic slicing can only grab contiguous ranges - fancy indexing
+           lets you grab any arbitrary combination of positions.
+    WHEN : Use when you need SPECIFIC, non-contiguous rows/columns/elements,
+           e.g. selecting rows [0, 5, 10] out of a large dataset.
+    """
+    header("f_fancy_indexing() -> arr[[i,j,k]]")
+    arr = np.arange(1, 26).reshape(5, 5)
+    idx = [0, 2, 4]
+    print("arr:\n", arr)
+    print("arr[[0,2,4]] (non-contiguous rows):\n", arr[idx])
+    return arr[idx]
+
+
+def f_boolean_indexing():
+    """
+    arr[condition]
+    WHAT : Selects only the elements where a boolean condition is True.
+    WHY  : Lets you filter data based on VALUE rather than position -
+           essential for real-world data cleaning/filtering.
+    WHEN : Use whenever you need "give me all values that satisfy X",
+           e.g. all values greater than a threshold, or all non-null entries.
+    """
+    header("f_boolean_indexing() -> arr[condition]")
+    arr = np.arange(1, 11)
+    print("arr:", arr)
+    mask = arr % 2 == 0
+    print("mask (arr % 2 == 0):", mask)
+    result = arr[mask]
+    print("arr[mask] (even numbers only):", result)
+    return result
+
+
+# ==============================================================================
+# CATEGORY 5: ARITHMETIC & UNIVERSAL FUNCTIONS (ufuncs)
+# ==============================================================================
+
+def f_add():
+    """
+    np.add(a, b) / a + b
+    WHAT : Element-wise addition of two arrays (or array + scalar).
+    WHY  : Runs as a compiled C loop under the hood - far faster than a
+           Python for-loop adding elements one at a time.
+    WHEN : Use for any elementwise sum - combining datasets, adding an
+           offset, accumulating values.
+    """
+    header("f_add() -> np.add() / +")
+    a = np.array([1, 2, 3])
+    b = np.array([10, 20, 30])
+    result = a + b
+    print(f"{a} + {b} =", result)
+    return result
+
+
+def f_multiply():
+    """
+    np.multiply(a, b) / a * b
+    WHAT : Element-wise multiplication (NOT matrix multiplication!).
+    WHY  : Needed for scaling data, applying weights, or elementwise
+           products - distinct from linear-algebra matrix multiply (@).
+    WHEN : Use whenever you want to multiply corresponding elements
+           together, e.g. applying per-element weights to a dataset.
+    """
+    header("f_multiply() -> np.multiply() / *")
+    a = np.array([1, 2, 3])
+    b = np.array([10, 20, 30])
+    result = a * b
+    print(f"{a} * {b} =", result, "(element-wise, not matrix multiply)")
+    return result
+
+
+def f_sqrt():
+    """
+    np.sqrt(arr)
+    WHAT : Computes the square root of every element.
+    WHY  : Common in distance calculations (Euclidean distance), standard
+           deviation, and normalizing values.
+    WHEN : Use whenever a formula involves a square root applied to many
+           values at once (e.g. computing distances for a whole dataset).
+    """
+    header("f_sqrt() -> np.sqrt()")
+    arr = np.array([1, 4, 9, 16])
+    result = np.sqrt(arr)
+    print("np.sqrt([1,4,9,16]):", result)
+    return result
+
+
+def f_exp():
+    """
+    np.exp(arr)
+    WHAT : Computes e^x (Euler's number raised to the power x) for every
+           element.
+    WHY  : Fundamental in growth/decay models, and central to the softmax
+           function used throughout machine learning.
+    WHEN : Use for exponential growth calculations, or any formula
+           involving e^x applied across a dataset.
+    """
+    header("f_exp() -> np.exp()")
+    arr = np.array([0, 1, 2])
+    result = np.exp(arr)
+    print("np.exp([0,1,2]):", result)
+    return result
+
+
+def f_log():
+    """
+    np.log(arr)
+    WHAT : Computes the natural logarithm (base e) of every element.
+    WHY  : Used to compress large ranges of values, and appears in
+           information theory, log-loss, and entropy calculations.
+    WHEN : Use when data spans several orders of magnitude, or when a
+           formula (like log-loss in ML) explicitly calls for it.
+    """
+    header("f_log() -> np.log()")
+    arr = np.array([1, np.e, np.e**2])
+    result = np.log(arr)
+    print("np.log([1, e, e^2]):", result)
+    return result
+
+
+def f_abs():
+    """
+    np.abs(arr)
+    WHAT : Computes the absolute value of every element (removes sign).
+    WHY  : Needed whenever direction/sign doesn't matter, only magnitude -
+           e.g. measuring error size regardless of over/under estimate.
+    WHEN : Use when computing error magnitudes, distances, or any value
+           that should always be non-negative.
+    """
+    header("f_abs() -> np.abs()")
+    arr = np.array([-3, -1, 0, 2, 5])
+    result = np.abs(arr)
+    print("np.abs([-3,-1,0,2,5]):", result)
+    return result
+
+
+def f_round():
+    """
+    np.round(arr, decimals)
+    WHAT : Rounds every element to a given number of decimal places.
+    WHY  : Floating-point math often produces long, ugly decimals that need
+           trimming for display or to match required precision.
+    WHEN : Use before displaying results to users, or when a specific
+           precision is required (e.g. currency to 2 decimal places).
+    """
+    header("f_round() -> np.round()")
+    arr = np.array([1.23456, 2.34567, 3.45678])
+    result = np.round(arr, 2)
+    print("np.round([1.23456, 2.34567, 3.45678], 2):", result)
+    return result
+
+
+def f_power():
+    """
+    np.power(arr, exponent) / arr ** exponent
+    WHAT : Raises every element to a given power.
+    WHY  : Needed for polynomial formulas, variance calculations (squares),
+           and any exponential relationship.
+    WHEN : Use for squaring/cubing data, or applying any custom exponent
+           across an entire array at once.
+    """
+    header("f_power() -> np.power() / **")
+    arr = np.array([1, 2, 3, 4])
+    result = np.power(arr, 2)
+    print("np.power([1,2,3,4], 2):", result)
+    return result
+
+
+# ==============================================================================
+# CATEGORY 6: STATISTICAL / AGGREGATE METHODS
+# ==============================================================================
+
+def f_sum():
+    """
+    arr.sum(axis=None)
+    WHAT : Adds up all elements, or all elements ALONG a specific axis.
+    WHY  : Totaling values is one of the most common data operations
+           (revenue totals, counts, accumulations).
+    WHEN : Use axis=0 to sum DOWN columns, axis=1 to sum ACROSS rows, or no
+           axis for a single grand total.
+    """
+    header("f_sum() -> arr.sum()")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    print("arr:\n", arr)
+    print("arr.sum()        :", arr.sum(), "-> grand total")
+    print("arr.sum(axis=0)  :", arr.sum(axis=0), "-> column sums")
+    print("arr.sum(axis=1)  :", arr.sum(axis=1), "-> row sums")
+    return arr.sum()
+
+
+def f_mean():
+    """
+    arr.mean(axis=None)
+    WHAT : Computes the average value.
+    WHY  : The standard way to describe the "center" of a dataset.
+    WHEN : Use to summarize typical values - but be aware it's sensitive
+           to outliers (a few huge values can skew it).
+    """
+    header("f_mean() -> arr.mean()")
+    arr = np.array([1, 2, 3, 4, 100])
+    print("arr:", arr)
+    print("arr.mean():", arr.mean(), "-> pulled upward by the outlier 100")
+    return arr.mean()
+
+
+def f_median():
+    """
+    np.median(arr)
+    WHAT : Computes the middle value when data is sorted.
+    WHY  : Unlike mean, median is ROBUST to outliers - a few extreme values
+           don't drag it far from the "typical" value.
+    WHEN : Use instead of mean when your data has outliers or skew
+           (e.g. household income, response times).
+    """
+    header("f_median() -> np.median()")
+    arr = np.array([1, 2, 3, 4, 100])
+    print("arr:", arr)
+    print("np.median(arr):", np.median(arr), "-> unaffected by the outlier 100, unlike mean")
+    return np.median(arr)
+
+
+def f_std():
+    """
+    arr.std()
+    WHAT : Computes the standard deviation - how spread out values are
+           around the mean.
+    WHY  : A single sum or mean doesn't tell you if data is tightly
+           clustered or widely scattered - std captures that.
+    WHEN : Use when measuring consistency/variability, e.g. checking if
+           a manufacturing process is stable, or comparing risk in finance.
+    """
+    header("f_std() -> arr.std()")
+    tight = np.array([9, 10, 11])
+    spread = np.array([0, 10, 20])
+    print("tight  data:", tight, "-> std:", tight.std())
+    print("spread data:", spread, "-> std:", spread.std())
+    return tight.std()
+
+
+def f_var():
+    """
+    arr.var()
+    WHAT : Computes variance - the average squared deviation from the mean
+           (std is just the square root of this).
+    WHY  : Variance is the mathematical building block behind std and many
+           statistical/ML formulas (e.g. variance of predictions).
+    WHEN : Use when a formula specifically requires variance rather than
+           standard deviation (they're closely related but not the same units).
+    """
+    header("f_var() -> arr.var()")
+    arr = np.array([2, 4, 4, 4, 5, 5, 7, 9])
+    print("arr:", arr)
+    print("arr.var():", arr.var())
+    return arr.var()
+
+
+def f_min_max():
+    """
+    arr.min() / arr.max()
+    WHAT : Returns the smallest / largest value in the array.
+    WHY  : Extremes matter for validation (out-of-range checks) and for
+           normalizing data (min-max scaling).
+    WHEN : Use whenever you need to know the range boundaries of your data.
+    """
+    header("f_min_max() -> arr.min() / arr.max()")
+    arr = np.array([5, 3, 9, 1, 7])
+    print("arr:", arr)
+    print("arr.min():", arr.min(), " arr.max():", arr.max())
+    return arr.min(), arr.max()
+
+
+def f_argmin_argmax():
+    """
+    arr.argmin() / arr.argmax()
+    WHAT : Returns the INDEX (position) of the smallest / largest value,
+           not the value itself.
+    WHY  : Sometimes you need to know WHERE the extreme value is located,
+           e.g. to look up the corresponding label or row.
+    WHEN : Use when the position matters more than the value, e.g. finding
+           which row had the highest score to retrieve its other columns.
+    """
+    header("f_argmin_argmax() -> arr.argmin() / arr.argmax()")
+    arr = np.array([5, 3, 9, 1, 7])
+    print("arr:", arr)
+    print("arr.argmin():", arr.argmin(), "-> index of smallest value (1)")
+    print("arr.argmax():", arr.argmax(), "-> index of largest value (9)")
+    return arr.argmin(), arr.argmax()
+
+
+def f_cumsum():
+    """
+    arr.cumsum()
+    WHAT : Returns the RUNNING total at each position (cumulative sum).
+    WHY  : Useful for tracking accumulation over time/sequence, rather
+           than just the final total.
+    WHEN : Use for running balances, cumulative revenue over months, or
+           progress tracking where every intermediate total matters.
+    """
+    header("f_cumsum() -> arr.cumsum()")
+    arr = np.array([10, 20, 30, 40])
+    print("arr:", arr)
+    print("arr.cumsum():", arr.cumsum(), "-> running total at each step")
+    return arr.cumsum()
+
+
+def f_cumprod():
+    """
+    arr.cumprod()
+    WHAT : Returns the RUNNING product at each position (cumulative product).
+    WHY  : Needed for compounding calculations, where each step multiplies
+           onto the previous result rather than adding.
+    WHEN : Use for compound interest/growth calculations, or probability
+           chains where each step multiplies the running result.
+    """
+    header("f_cumprod() -> arr.cumprod()")
+    arr = np.array([1.1, 1.1, 1.1])
+    print("arr (growth factors):", arr)
+    print("arr.cumprod():", arr.cumprod(), "-> compounding growth after each period")
+    return arr.cumprod()
+
+
+def f_percentile():
+    """
+    np.percentile(arr, q)
+    WHAT : Returns the value below which q% of the data falls.
+    WHY  : Averages can hide important detail - percentiles describe the
+           actual DISTRIBUTION shape (e.g. "typical" vs "worst-case").
+    WHEN : Use for SLA/performance reporting (e.g. p90/p99 latency), or
+           any time you need a specific point in the distribution.
+    """
+    header("f_percentile() -> np.percentile()")
+    arr = np.array([12, 15, 14, 10, 100, 13, 11])
+    print("arr:", arr)
+    print("50th percentile (median):", np.percentile(arr, 50))
+    print("90th percentile         :", np.percentile(arr, 90), "-> only 10% of values are above this")
+    return np.percentile(arr, 90)
+
+
+def f_unique():
+    """
+    np.unique(arr, return_counts=False)
+    WHAT : Returns the sorted, distinct values in an array (optionally with
+           their frequency counts).
+    WHY  : Duplicate removal and category/frequency discovery are extremely
+           common in data analysis (similar to pandas' value_counts()).
+    WHEN : Use to find distinct categories in data, remove duplicates, or
+           count how often each value appears.
+    """
+    header("f_unique() -> np.unique()")
+    arr = np.array([1, 2, 2, 3, 3, 3, 4])
+    print("arr:", arr)
+    values, counts = np.unique(arr, return_counts=True)
+    print("unique values:", values)
+    print("counts       :", counts)
+    return values, counts
+
+
+# ==============================================================================
+# CATEGORY 7: SORTING & SEARCHING
+# ==============================================================================
+
+def f_sort():
+    """
+    np.sort(arr) / arr.sort()
+    WHAT : np.sort(arr) returns a SORTED COPY; arr.sort() sorts IN-PLACE.
+    WHY  : Ordering data is fundamental for ranking, reporting, and
+           preparing data for algorithms that require sorted input.
+    WHEN : Use np.sort() when you need the original preserved; use
+           arr.sort() when you're fine mutating the original (saves memory).
+    """
+    header("f_sort() -> np.sort() / arr.sort()")
+    arr = np.array([3, 1, 4, 1, 5, 9, 2, 6])
+    print("original      :", arr)
+    print("np.sort(arr)  :", np.sort(arr), "(copy, original untouched)")
+    arr.sort()
+    print("arr.sort()    :", arr, "(in-place, original changed)")
+    return arr
+
+
+def f_argsort():
+    """
+    np.argsort(arr)
+    WHAT : Returns the INDICES that WOULD sort the array, rather than the
+           sorted values themselves.
+    WHY  : Lets you sort one array based on another - e.g. sort names by
+           their corresponding scores while keeping the pairing intact.
+    WHEN : Use when you need to reorder related data together (e.g. sort a
+           list of names using the indices from sorting their scores).
+    """
+    header("f_argsort() -> np.argsort()")
+    scores = np.array([85, 60, 95, 70])
+    names = np.array(["Alice", "Bob", "Cara", "Dan"])
+    order = np.argsort(scores)
+    print("scores:", scores)
+    print("argsort indices:", order)
+    print("names sorted by score:", names[order])
+    return order
+
+
+def f_where():
+    """
+    np.where(condition, a, b)
+    WHAT : Two modes - (1) np.where(condition) returns INDICES where True;
+           (2) np.where(condition, a, b) picks from `a` where True, `b`
+           where False (vectorized if/else).
+    WHY  : Replaces slow Python if/else loops with a single fast vectorized
+           operation.
+    WHEN : Use for conditional value replacement across an entire array at
+           once, e.g. capping outliers, categorizing values, masking data.
+    """
+    header("f_where() -> np.where()")
+    arr = np.array([1, -2, 3, -4, 5])
+    print("arr:", arr)
+    print("np.where(arr<0)        :", np.where(arr < 0), "-> indices where condition is True")
+    print("np.where(arr<0,0,arr)  :", np.where(arr < 0, 0, arr), "-> vectorized if/else: negatives replaced with 0")
+    return np.where(arr < 0, 0, arr)
+
+
+def f_nonzero():
+    """
+    np.nonzero(arr)
+    WHAT : Returns the indices of all non-zero (or True) elements.
+    WHY  : A quick way to locate "active"/"true"/"present" entries without
+           writing a manual loop.
+    WHEN : Use when you need positions of non-zero/True values, e.g.
+           finding which pixels are lit in a mostly-black image mask.
+    """
+    header("f_nonzero() -> np.nonzero()")
+    arr = np.array([0, 3, 0, 0, 7, 5])
+    print("arr:", arr)
+    print("np.nonzero(arr):", np.nonzero(arr), "-> indices of non-zero elements")
+    return np.nonzero(arr)
+
+
+def f_searchsorted():
+    """
+    np.searchsorted(sorted_arr, value)
+    WHAT : Finds the index where `value` should be INSERTED to keep a
+           SORTED array still sorted (binary search - very fast).
+    WHY  : Way faster than a linear scan for finding insertion points in
+           large sorted datasets (O(log n) instead of O(n)).
+    WHEN : Use when working with sorted data and needing to find where new
+           values fit, e.g. binning values into sorted ranges.
+    """
+    header("f_searchsorted() -> np.searchsorted()")
+    sorted_arr = np.array([1, 3, 5, 7, 9])
+    print("sorted_arr:", sorted_arr)
+    idx = np.searchsorted(sorted_arr, 6)
+    print("np.searchsorted(sorted_arr, 6):", idx, "-> 6 should be inserted at index", idx, "to keep it sorted")
+    return idx
+
+
+# ==============================================================================
+# CATEGORY 8: LINEAR ALGEBRA
+# ==============================================================================
+
+def f_matmul():
+    """
+    arr1 @ arr2 / np.matmul()
+    WHAT : Performs TRUE matrix multiplication (row-by-column dot products),
+           NOT element-wise multiplication.
+    WHY  : Matrix multiplication is the core operation behind linear
+           transformations, neural network layers, and graphics.
+    WHEN : Use whenever you need actual matrix multiplication, e.g. applying
+           weights in a neural network layer, or transforming coordinates.
+    """
+    header("f_matmul() -> @ / np.matmul()")
+    A = np.array([[1, 2], [3, 4]])
+    B = np.array([[5, 6], [7, 8]])
+    result = A @ B
+    print("A:\n", A, "\nB:\n", B)
+    print("A @ B (matrix multiply):\n", result)
+    return result
+
+
+def f_det():
+    """
+    np.linalg.det(matrix)
+    WHAT : Computes the determinant of a square matrix (a single number
+           summarizing certain matrix properties).
+    WHY  : A determinant of 0 means the matrix is "singular" (not
+           invertible) - critical to know before trying to solve equations.
+    WHEN : Use to check if a matrix can be inverted, or in formulas from
+           geometry/calculus that require the determinant (e.g. Jacobians).
+    """
+    header("f_det() -> np.linalg.det()")
+    A = np.array([[1, 2], [3, 4]])
+    print("A:\n", A)
+    print("np.linalg.det(A):", np.linalg.det(A))
+    return np.linalg.det(A)
+
+
+def f_inv():
+    """
+    np.linalg.inv(matrix)
+    WHAT : Computes the inverse of a square matrix (the matrix that
+           "undoes" the original when multiplied together).
+    WHY  : Needed to algebraically "divide" by a matrix, e.g. solving
+           systems of linear equations or reversing a transformation.
+    WHEN : Use when solving Ax=b problems manually, or reversing a linear
+           transformation (though np.linalg.solve is often more efficient).
+    """
+    header("f_inv() -> np.linalg.inv()")
+    A = np.array([[4, 7], [2, 6]])
+    inv_A = np.linalg.inv(A)
+    print("A:\n", A)
+    print("np.linalg.inv(A):\n", inv_A)
+    print("Check: A @ inv(A) ≈ Identity:\n", np.round(A @ inv_A, 5))
+    return inv_A
+
+
+def f_solve():
+    """
+    np.linalg.solve(A, b)
+    WHAT : Solves the linear system Ax = b directly for x.
+    WHY  : Faster and numerically more stable than manually computing
+           inv(A) @ b - avoids unnecessary precision loss.
+    WHEN : Use whenever you have a system of linear equations to solve,
+           e.g. balancing chemical equations, circuit analysis, regression.
+    """
+    header("f_solve() -> np.linalg.solve()")
+    A = np.array([[3, 1], [1, 2]])
+    b = np.array([9, 8])
+    x = np.linalg.solve(A, b)
+    print("Solving Ax=b for A:\n", A, "\nb:", b)
+    print("x =", x)
+    return x
+
+
+def f_norm():
+    """
+    np.linalg.norm(vector)
+    WHAT : Computes the magnitude/length of a vector (Euclidean norm by
+           default).
+    WHY  : "Distance" and "magnitude" show up everywhere - physics,
+           machine learning (loss functions), computer graphics.
+    WHEN : Use to measure how "big" a vector is, or to compute distances
+           between two points (norm of their difference).
+    """
+    header("f_norm() -> np.linalg.norm()")
+    v = np.array([3, 4])
+    print("vector:", v)
+    print("np.linalg.norm(v):", np.linalg.norm(v), "-> classic 3-4-5 triangle, length = 5")
+    return np.linalg.norm(v)
+
+
+def f_eig():
+    """
+    np.linalg.eig(matrix)
+    WHAT : Computes the eigenvalues and eigenvectors of a square matrix.
+    WHY  : Eigenvalues/vectors reveal a matrix's fundamental "directions"
+           and "scaling factors" - central to PCA, stability analysis,
+           and vibration/oscillation problems.
+    WHEN : Use in dimensionality reduction (PCA), analyzing dynamic systems,
+           or any problem asking about a matrix's intrinsic structure.
+    """
+    header("f_eig() -> np.linalg.eig()")
+    A = np.array([[2, 0], [0, 3]])
+    eigenvalues, eigenvectors = np.linalg.eig(A)
+    print("A:\n", A)
+    print("eigenvalues :", eigenvalues)
+    print("eigenvectors:\n", eigenvectors)
+    return eigenvalues, eigenvectors
+
+
+# ==============================================================================
+# CATEGORY 9: COPY vs VIEW
+# ==============================================================================
+
+def f_copy():
+    """
+    arr.copy()
+    WHAT : Creates a fully INDEPENDENT copy of an array's data in new memory.
+    WHY  : Slicing/reshaping often returns a VIEW that shares memory with
+           the original - modifying a view silently changes the original
+           too, which causes subtle bugs. copy() prevents that.
+    WHEN : Use whenever you need to modify a subset of data WITHOUT
+           affecting the original array it came from.
+    """
+    header("f_copy() -> arr.copy()")
+    original = np.array([1, 2, 3, 4, 5])
+    safe_copy = original[1:4].copy()
+    safe_copy[0] = 999
+    print("original (untouched):", original)
+    print("safe_copy (modified):", safe_copy)
+    return safe_copy
+
+
+def f_view_behavior():
+    """
+    arr[slice]  (implicitly returns a VIEW, not a copy)
+    WHAT : Basic slicing returns a VIEW - a window into the SAME memory as
+           the original array, not new memory.
+    WHY  : Views are fast and memory-efficient (no copying), but this means
+           changes to a view affect the original array too - a very common
+           source of confusing bugs for NumPy beginners.
+    WHEN : Rely on this behavior when you WANT changes to propagate back
+           (e.g. modifying part of a big array in place); otherwise, call
+           .copy() explicitly.
+    """
+    header("f_view_behavior() -> slicing returns a view")
+    original = np.array([1, 2, 3, 4, 5])
+    view = original[1:4]
+    print("original before:", original)
+    view[0] = 999
+    print("original AFTER modifying the view:", original, "-> changed! views share memory")
+    return view
+
+
+# ==============================================================================
+# CATEGORY 10: SAVING & LOADING (Array I/O / Persistence)
+# ==============================================================================
+
+def f_save_load_npy():
+    """
+    np.save() / np.load()
+    WHAT : Writes a single array to disk in NumPy's own fast binary format
+           (.npy), and reads it back exactly as it was.
+    WHY  : Exact, lossless, and fast round-tripping of array data - far
+           quicker than re-parsing text on every load.
+    WHEN : Use when you need to persist array data between Python program
+           runs and don't need the file to be human-readable.
+    """
+    header("f_save_load_npy() -> np.save() / np.load()")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    np.save("/tmp/demo_array.npy", arr)
+    loaded = np.load("/tmp/demo_array.npy")
+    print("saved array:\n", arr)
+    print("loaded back from .npy:\n", loaded)
+    return loaded
+
+
+def f_savez():
+    """
+    np.savez() / np.load() for multiple arrays
+    WHAT : Saves MULTIPLE named arrays together into a single .npz file
+           (a zipped archive of .npy files).
+    WHY  : Keeps related arrays bundled in one file instead of managing
+           several separate files.
+    WHEN : Use when a single "session" or "result set" involves multiple
+           arrays that belong together (e.g. training data + labels).
+    """
+    header("f_savez() -> np.savez()")
+    a = np.array([1, 2, 3])
+    b = np.array([4, 5, 6])
+    np.savez("/tmp/demo_multi.npz", features=a, labels=b)
+    loaded = np.load("/tmp/demo_multi.npz")
+    print("saved arrays under keys:", list(loaded.keys()))
+    print("loaded['features']:", loaded["features"])
+    print("loaded['labels']  :", loaded["labels"])
+    return loaded
+
+
+def f_savetxt_loadtxt():
+    """
+    np.savetxt() / np.loadtxt()
+    WHAT : Saves/loads an array as human-readable plain text (e.g. CSV).
+    WHY  : Unlike .npy (binary), text files can be opened in Excel, viewed
+           in a text editor, or shared with tools that don't use NumPy.
+    WHEN : Use when the file needs to be human-readable or compatible with
+           other software (spreadsheets, other programming languages).
+    """
+    header("f_savetxt_loadtxt() -> np.savetxt() / np.loadtxt()")
+    arr = np.array([[1, 2, 3], [4, 5, 6]])
+    np.savetxt("/tmp/demo_array.csv", arr, delimiter=",", fmt="%d")
+    loaded = np.loadtxt("/tmp/demo_array.csv", delimiter=",")
+    print("saved as CSV, loaded back:\n", loaded)
+    return loaded
+
+
+# ==============================================================================
+# MAIN: RUN EVERY FUNCTION IN ORDER
+# ==============================================================================
+
+def main():
+    creation_fns = [f_array, f_zeros, f_ones, f_full, f_empty, f_arange, f_linspace,
+                    f_eye, f_diag, f_random_rand, f_random_randn, f_random_randint, f_zeros_like]
+    attribute_fns = [f_ndim, f_shape, f_size, f_dtype, f_itemsize, f_nbytes,
+                      f_T, f_flat, f_flags, f_base]
+    reshape_fns = [f_reshape, f_flatten, f_ravel, f_transpose, f_swapaxes, f_resize,
+                   f_concatenate, f_stack, f_vstack, f_hstack, f_split,
+                   f_expand_dims, f_squeeze]
+    index_fns = [f_basic_slicing, f_fancy_indexing, f_boolean_indexing]
+    math_fns = [f_add, f_multiply, f_sqrt, f_exp, f_log, f_abs, f_round, f_power]
+    stats_fns = [f_sum, f_mean, f_median, f_std, f_var, f_min_max, f_argmin_argmax,
+                 f_cumsum, f_cumprod, f_percentile, f_unique]
+    sort_fns = [f_sort, f_argsort, f_where, f_nonzero, f_searchsorted]
+    linalg_fns = [f_matmul, f_det, f_inv, f_solve, f_norm, f_eig]
+    copyview_fns = [f_copy, f_view_behavior]
+    io_fns = [f_save_load_npy, f_savez, f_savetxt_loadtxt]
+
+    all_groups = [
+        ("CATEGORY 1: ARRAY CREATION", creation_fns),
+        ("CATEGORY 2: ARRAY ATTRIBUTES", attribute_fns),
+        ("CATEGORY 3: RESHAPING & MANIPULATION", reshape_fns),
+        ("CATEGORY 4: INDEXING & SLICING", index_fns),
+        ("CATEGORY 5: ARITHMETIC & UFUNCS", math_fns),
+        ("CATEGORY 6: STATISTICS / AGGREGATES", stats_fns),
+        ("CATEGORY 7: SORTING & SEARCHING", sort_fns),
+        ("CATEGORY 8: LINEAR ALGEBRA", linalg_fns),
+        ("CATEGORY 9: COPY vs VIEW", copyview_fns),
+        ("CATEGORY 10: SAVING & LOADING", io_fns),
+    ]
+
+    total = 0
+    for group_title, fns in all_groups:
+        print("\n" + "=" * 78)
+        print(group_title)
+        print("=" * 78)
+        for fn in fns:
+            fn()
+            total += 1
+
+    print("\n" + "=" * 78)
+    print(f"DONE. Ran {total} individual functions, one per NumPy method/attribute.")
+    print("Tip: import this file and call any single function, e.g.:")
+    print("     from numpy_functions_project import f_reshape")
+    print("     f_reshape()")
+    print("=" * 78)
+
+
+if __name__ == "__main__":
+    main()
