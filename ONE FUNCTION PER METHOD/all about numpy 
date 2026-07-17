@@ -1,0 +1,276 @@
+"""
+=====================================================================
+NUMPY COMPLETE GUIDE - DATA ANALYST KE LIYE (HINGLISH MEIN)
+=====================================================================
+Ye file ek end-to-end reference hai. Har section mein:
+- WHAT   -> ye cheez kya hai
+- WHY    -> isko kyu use karte hai
+- WHEN   -> kab use karna chahiye
+- WHERE  -> data analysis mein kaha use hota hai
+- CODE   -> ek simple samajhne wala example
+=====================================================================
+"""
+
+import numpy as np
+
+
+# =====================================================================
+# 1. NUMPY ARRAY BASICS
+# =====================================================================
+# WHAT  -> numpy ka core object hai "ndarray" (n-dimensional array)
+# WHY   -> python ki normal list se numpy array bahut FAST hai kyuki
+#          ye ek hi type ka data store karta hai aur C language mein
+#          likha gaya hai (memory efficient bhi hai)
+# WHEN  -> jab bhi numbers ka bada dataset ho aur fast calculation
+#          chahiye ho
+# WHERE -> data analyst ke pass jitna bhi numeric data hota hai
+#          (sales numbers, prices, scores) sab array mein convert hota hai
+
+list_data = [10, 20, 30, 40, 50]          # normal python list
+arr = np.array(list_data)                 # list ko numpy array banaya
+print("1) Array:", arr)
+print("   Type:", type(arr))              # numpy.ndarray
+
+
+# =====================================================================
+# 2. ARRAY KE DIMENSIONS (1D, 2D, 3D)
+# =====================================================================
+# WHAT  -> array ek line ka (1D), table jaisa (2D), ya cube jaisa (3D) ho sakta
+# WHY   -> real world data table format mein hota hai (rows aur columns)
+#          isliye 2D array bahut common hai
+# WHEN  -> jab excel jaisa row-column data handle karna ho
+# WHERE -> ek dataset (jaise CSV file) 2D array jaisa hi hota hai
+
+arr_1d = np.array([1, 2, 3])
+arr_2d = np.array([[1, 2, 3], [4, 5, 6]])       # 2 rows, 3 columns
+arr_3d = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+
+print("\n2) Shape of 1D:", arr_1d.shape)   # (3,)
+print("   Shape of 2D:", arr_2d.shape)     # (2, 3) -> 2 rows, 3 cols
+print("   Shape of 3D:", arr_3d.shape)     # (2, 2, 2)
+print("   Dimensions (ndim):", arr_2d.ndim)  # kitne dimension hai -> 2
+
+
+# =====================================================================
+# 3. ARRAY CREATION FUNCTIONS (jaldi array banane ke tarike)
+# =====================================================================
+# WHAT  -> numpy ke built-in functions jo directly array bana dete hai
+# WHY   -> manually type karne ki jarurat nahi, testing/setup mein time bachta hai
+# WHEN  -> jab dummy data, placeholder, ya sequence chahiye ho
+# WHERE -> matrix initialize karna, testing data banana, ranges banana
+
+zeros_arr = np.zeros((2, 3))        # sab 0 se bhara 2x3 array
+ones_arr = np.ones((2, 3))          # sab 1 se bhara array
+range_arr = np.arange(0, 10, 2)     # 0 se 10 tak, 2 ke gap se -> [0,2,4,6,8]
+linspace_arr = np.linspace(0, 1, 5) # 0 se 1 ke beech 5 equal parts
+identity_arr = np.eye(3)            # 3x3 identity matrix (diagonal mein 1)
+random_arr = np.random.rand(2, 2)   # random numbers 0-1 ke beech
+
+print("\n3) Zeros:\n", zeros_arr)
+print("   Arange:", range_arr)
+print("   Linspace:", linspace_arr)
+
+
+# =====================================================================
+# 4. INDEXING & SLICING (data ka specific hissa nikalna)
+# =====================================================================
+# WHAT  -> array ke andar se specific value ya range nikalna
+# WHY   -> pura dataset nahi, sirf jo chahiye wahi dekhna hota hai
+# WHEN  -> jab specific row, column, ya range of data analyse karna ho
+# WHERE -> "mujhe sirf first 5 rows dikhao" jaisa kaam data analyst
+#          roz karta hai
+
+data = np.array([[10, 20, 30], [40, 50, 60], [70, 80, 90]])
+
+print("\n4) Full data:\n", data)
+print("   Single element (row1,col2):", data[1, 2])   # 60
+print("   Full first row:", data[0, :])                # [10 20 30]
+print("   Full second column:", data[:, 1])             # [20 50 80]
+print("   Slice (first 2 rows, first 2 cols):\n", data[0:2, 0:2])
+
+
+# =====================================================================
+# 5. BOOLEAN / CONDITIONAL FILTERING (condition laga kar data nikalna)
+# =====================================================================
+# WHAT  -> ek condition ke basis par data filter karna
+# WHY   -> real data analysis mein hume "jaha value > 50 ho" jaisa
+#          filter hamesha lagana padta hai
+# WHEN  -> jab specific criteria ke sath data dekhna/nikalna ho
+# WHERE -> "sirf wo customers dikhao jinka purchase > 1000 hai" -> yahi kaam
+
+sales = np.array([200, 550, 1200, 300, 900])
+
+mask = sales > 500                    # True/False ka array banata hai
+print("\n5) Mask:", mask)
+print("   Filtered sales (>500):", sales[mask])   # direct filter ho gaya
+print("   Shortcut same line:", sales[sales > 500])
+
+
+# =====================================================================
+# 6. MATHEMATICAL OPERATIONS (vectorized operations)
+# =====================================================================
+# WHAT  -> pura array par ek sath math operation apply karna (loop ki
+#          jarurat nahi)
+# WHY   -> ye "vectorization" kehlata hai, normal for-loop se kai guna
+#          FAST hai
+# WHEN  -> jab har element par same calculation karni ho
+# WHERE -> discount lagana, tax add karna, unit conversion, etc.
+
+prices = np.array([100, 200, 300])
+
+print("\n6) Prices + 10 (add):", prices + 10)
+print("   Prices * 2 (multiply):", prices * 2)
+print("   10% discount:", prices - (prices * 0.10))
+print("   Square root:", np.sqrt(prices))
+
+
+# =====================================================================
+# 7. AGGREGATE / STATISTICAL FUNCTIONS
+# =====================================================================
+# WHAT  -> pure array ka summary nikalna (sum, average, max, min, etc.)
+# WHY   -> data analyst ka sabse common kaam hi "summary statistics"
+#          nikalna hota hai
+# WHEN  -> jab overall trend ya summary chahiye ho (report banate waqt)
+# WHERE -> "average sales kitni hai", "max profit kaunse month mein" -> ye sab
+
+marks = np.array([56, 78, 92, 45, 88, 67])
+
+print("\n7) Sum:", np.sum(marks))
+print("   Mean (average):", np.mean(marks))
+print("   Median:", np.median(marks))
+print("   Standard Deviation:", np.std(marks))
+print("   Min:", np.min(marks), " Max:", np.max(marks))
+print("   Index of max value (argmax):", np.argmax(marks))  # position batata hai
+
+
+# =====================================================================
+# 8. AXIS CONCEPT (2D array mein row-wise vs column-wise operation)
+# =====================================================================
+# WHAT  -> axis=0 matlab COLUMN wise (upar-neeche), axis=1 matlab
+#          ROW wise (left-right)
+# WHY   -> table jaisa data mein hume kabhi row ka total chahiye,
+#          kabhi column ka
+# WHEN  -> jab groupwise (row/column) summary nikalni ho
+# WHERE -> "har product ka total sale" (row-wise) ya "har month ka
+#          total sale" (column-wise) jaisa report
+
+table = np.array([[10, 20, 30],
+                   [40, 50, 60]])
+
+print("\n8) Table:\n", table)
+print("   Column-wise sum (axis=0):", np.sum(table, axis=0))  # [50 70 90]
+print("   Row-wise sum (axis=1):", np.sum(table, axis=1))      # [60 150]
+
+
+# =====================================================================
+# 9. RESHAPE (array ka shape badalna)
+# =====================================================================
+# WHAT  -> array ke elements same rehte hai, sirf structure (rows/cols)
+#          change hota hai
+# WHY   -> kisi model ya function ko specific shape ka data chahiye hota hai
+# WHEN  -> jab 1D data ko table format mein convert karna ho ya vice-versa
+# WHERE -> ML model ko data dene se pehle, ya image data process karte waqt
+
+flat = np.arange(1, 7)             # [1,2,3,4,5,6]
+reshaped = flat.reshape(2, 3)      # 2 rows, 3 columns mein badla
+
+print("\n9) Flat array:", flat)
+print("   Reshaped (2x3):\n", reshaped)
+print("   Flatten back:", reshaped.flatten())   # wapas 1D mein
+
+
+# =====================================================================
+# 10. HANDLING MISSING DATA (NaN values)
+# =====================================================================
+# WHAT  -> NaN matlab "Not a Number" -> missing/empty data ko represent
+#          karta hai
+# WHY   -> real world data hamesha complete nahi hota, kuch values
+#          missing hoti hai
+# WHEN  -> jab dataset mein empty/blank cells ho
+# WHERE -> CSV files mein aksar missing values hoti hai (jaise kisi ka
+#          age column blank ho)
+
+data_with_nan = np.array([10, np.nan, 30, np.nan, 50])
+
+print("\n10) Data with NaN:", data_with_nan)
+print("    Is it NaN? :", np.isnan(data_with_nan))       # True/False array
+print("    Mean ignoring NaN:", np.nanmean(data_with_nan))  # NaN skip karke average
+print("    Clean data (NaN removed):", data_with_nan[~np.isnan(data_with_nan)])
+# ~ ka matlab hai "NOT" -> jo NaN NAHI hai wahi rakho
+
+
+# =====================================================================
+# 11. SORTING & UNIQUE VALUES
+# =====================================================================
+# WHAT  -> data ko order mein lagana (sort) aur duplicate values hatana (unique)
+# WHY   -> ranking, top-N analysis, aur duplicate check ke liye zaruri
+# WHEN  -> jab "top 5 highest sales" ya "kitne unique customers hai" jaisa
+#          sawal ho
+# WHERE -> leaderboard, ranking reports, duplicate detection
+
+scores = np.array([45, 90, 23, 90, 67, 23])
+
+print("\n11) Sorted:", np.sort(scores))
+print("    Unique values:", np.unique(scores))
+print("    Sorted descending:", np.sort(scores)[::-1])  # [::-1] reverse kar deta hai
+
+
+# =====================================================================
+# 12. COMBINING ARRAYS (concatenate / stack)
+# =====================================================================
+# WHAT  -> do ya zyada arrays ko jodna
+# WHY   -> alag-alag source ka data ek sath combine karna padta hai
+# WHEN  -> jab do months ka data ek sath dekhna ho, ya do tables merge
+#          karni ho
+# WHERE -> multiple CSV/reports ka data ek final report mein combine karna
+
+jan_sales = np.array([100, 200, 300])
+feb_sales = np.array([150, 250, 350])
+
+combined = np.concatenate((jan_sales, feb_sales))
+stacked_rows = np.vstack((jan_sales, feb_sales))     # naye rows jod diye
+stacked_cols = np.column_stack((jan_sales, feb_sales))  # naye columns jod diye
+
+print("\n12) Concatenated:", combined)
+print("    Vertical stack (rows):\n", stacked_rows)
+print("    Column stack:\n", stacked_cols)
+
+
+# =====================================================================
+# 13. BROADCASTING (chhote array ko bade array ke sath operate karna)
+# =====================================================================
+# WHAT  -> jab do arrays ka size same nahi hota, phir bhi numpy
+#          automatically chhote array ko "stretch" karke operation kar deta hai
+# WHY   -> bina loop likhe, ek single value/row ko pure table par apply
+#          karna easy ho jata hai
+# WHEN  -> jab ek constant value ya ek row ko pure dataset par apply karna ho
+# WHERE -> har row mein se ek fixed tax/discount subtract karna
+
+prices_table = np.array([[100, 200], [300, 400], [500, 600]])
+discount_row = np.array([10, 20])   # har column ke liye alag discount
+
+result = prices_table - discount_row   # broadcasting automatically ho gaya
+print("\n13) Original:\n", prices_table)
+print("    After broadcast subtract:\n", result)
+
+
+# =====================================================================
+# QUICK SUMMARY TABLE (yaad rakhne ke liye)
+# =====================================================================
+print("""
+\n===================== QUICK CHEAT SHEET =====================
+np.array()          -> list se array banao
+.shape / .ndim       -> size aur dimension check karo
+np.zeros/ones/arange -> jaldi array generate karo
+arr[a:b, c:d]         -> slicing (specific hissa nikalo)
+arr[arr > x]          -> conditional filtering
++, -, *, /            -> vectorized math (loop nahi chahiye)
+np.mean/sum/max/min   -> summary statistics
+axis=0 / axis=1       -> column-wise / row-wise operation
+.reshape()            -> shape change karo
+np.isnan/nanmean       -> missing data handle karo
+np.sort/unique         -> sorting aur duplicates
+np.concatenate/vstack  -> arrays combine karo
+Broadcasting           -> chhote-bade array ka auto-match operation
+================================================================
+""")
