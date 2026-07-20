@@ -1,4 +1,5 @@
 import numpy as np
+
 # ==============================================================================
 # 11. Create Diagonal Matrix
 # ==============================================================================
@@ -7,6 +8,7 @@ import numpy as np
 # [2, 4, 6, 8]
 arr=np.diag([2,4,6,8])
 print(arr)
+print()
 # ==============================================================================
 # 12. Create Array with Range
 # ==============================================================================
@@ -14,13 +16,19 @@ print(arr)
 # Create arrays:
 # - 1 to 10
 # - 5 to 50 with step 5
-
+arr=np.arange(1,11)
+arr1=np.arange(5,51,5)
+print(arr)
+print(arr1)
+print()
 # ==============================================================================
 # 13. Create Even Numbers
 # ==============================================================================
 # Practice:
 # Create an array of even numbers from 2 to 20.
-
+arr=np.arange(2,21,2)
+print("Even number are in the array is:",arr)
+print()
 # ==============================================================================
 # 14. Create Equally Spaced Numbers
 # ==============================================================================
@@ -28,7 +36,11 @@ print(arr)
 # Create:
 # - 5 equally spaced numbers between 0 and 1
 # - 10 equally spaced numbers between 10 and 20
-
+arr=np.linspace(0,1,5)
+arr1=np.linspace(10,20,10)
+print(arr)
+print(arr1)
+print()
 # ==============================================================================
 # 15. Create Empty Array
 # ==============================================================================
@@ -36,7 +48,9 @@ print(arr)
 # Create an empty array of size 5.
 #
 # Print its values.
-
+arr=np.empty((4))
+print(arr)
+print()
 # ==============================================================================
 # 16. Create Full Array
 # ==============================================================================
@@ -44,7 +58,11 @@ print(arr)
 # Create:
 # - Five elements containing 100
 # - 3 × 3 array filled with 7
-
+arr=np.full(5,100)
+arr1=np.full((3,3),7)
+print(arr1)
+print(arr)
+print()
 # ==============================================================================
 # 17. Reshape Array
 # ==============================================================================
@@ -54,7 +72,9 @@ print(arr)
 # Convert it into:
 # - 3 × 4
 # - 2 × 6
-
+arr=np.arange(1,13)
+print(arr.reshape((3,4)))
+print("\n",arr.reshape((2,6)))
 # ==============================================================================
 # 18. Flatten Array
 # ==============================================================================
@@ -62,7 +82,10 @@ print(arr)
 # Create a 3 × 3 array.
 #
 # Convert it into a 1D array.
-
+arr=np.full((3,3),7)
+print(arr)
+flattern_arr=list(arr.flat)
+print(flattern_arr)
 # ==============================================================================
 # 19. Ravel Array
 # ==============================================================================
@@ -70,6 +93,17 @@ print(arr)
 # Create a 2D array.
 #
 # Convert it into a 1D array.
+arr = np.array([[1, 2, 3],
+                [4, 5, 6]])
+
+print("2D Array:")
+print(arr)
+
+# Convert to 1D
+arr1 = arr.ravel()
+
+print("\n1D Array:")
+print(arr1)
 
 # ==============================================================================
 # 20. Transpose Matrix
@@ -78,7 +112,9 @@ print(arr)
 # Create a 2 × 3 array.
 #
 # Transpose it.
-
+arr=np.arange(6).reshape(2,3)
+print(arr)
+print(arr.T)
 # ==============================================================================
 # 21. Resize Array
 # ==============================================================================
