@@ -1,0 +1,72 @@
+import numpy as np
+original = np.array([[1, 2], [3, 4]])
+result = np.zeros_like(original)
+print("original:\n", original)
+print("np.zeros_like(original):\n", result)
+
+#item size
+print("single element size",original.itemsize)
+
+#nbytes
+print("Total elements size",original.nbytes)
+
+#Transpose .T
+print("converting rows in to columns",original.T)
+
+#flat
+print("Converting two d array in to one d array:",list(original.flat))
+for i in original.flat:
+    print(i)
+    
+#flags
+
+
+a = np.array([[1, 2],
+              [3, 4]])
+
+print(a.flags['C_CONTIGUOUS'])  # True
+print(a.flags['F_CONTIGUOUS'])  # False
+print(a.flags)
+
+#base
+result=np.ravel(a)
+print(original.base)
+print(result.base)
+print()
+
+#ravel
+
+arr=np.arange(10).reshape(2,5)
+print(arr)
+print()
+b=np.ravel(arr)
+print(b)
+print()
+
+b[0]=100
+
+print(b)
+print(arr)
+
+
+arr = np.arange(24).reshape(2, 3, 4)
+print("original shape:", arr.shape)
+result = np.transpose(arr, axes=(1, 0, 2))
+print("transposed shape (axes swapped 0<->1):", result.shape)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
