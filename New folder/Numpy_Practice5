@@ -1,0 +1,94 @@
+# ==============================================================================
+# CATEGORY 5: ARITHMETIC & UNIVERSAL FUNCTIONS (ufuncs)
+# ==============================================================================
+import numpy as np
+print("\n" + "-"*50 + "\n")
+def f_add():
+    print("Adds two arrays element by element.")
+    print("Each position gets added with its corresponding position.")
+
+    a = np.array([1, 2, 3])
+    b = np.array([10, 20, 30])
+    result = a + b
+    print(f"{a} + {b} =", result)
+    return result
+f_add()
+print("\n" + "-"*50 + "\n")
+
+def f_multiply():
+    print("Multiplies arrays element by element.")
+    print("This is not matrix multiplication.")
+
+    a = np.array([1, 2, 3])
+    b = np.array([10, 20, 30])
+    result = a * b
+    print(f"{a} * {b} =", result)
+    return result
+f_multiply()
+print("\n" + "-"*50 + "\n")
+
+def f_sqrt():
+    print("Finds square root of every element.")
+    print("Each value is transformed independently.")
+
+    arr = np.array([1, 4, 9, 16])
+    result = np.sqrt(arr)
+    print("sqrt:", result)
+    return result
+f_sqrt()
+print("\n" + "-"*50 + "\n")
+
+def f_exp():
+    print("Calculates e raised to the power of each value.")
+    print("Commonly used in growth formulas and ML functions.")
+
+    arr = np.array([0, 1, 2])
+    result = np.exp(arr)
+    print("exp:", result)
+    return result
+f_exp()
+print("\n" + "-"*50 + "\n")
+
+def f_log():
+    print("Calculates natural logarithm (base e).")
+    print("Used to reduce large value ranges.")
+
+    arr = np.array([1, np.e, np.e**2])
+    result = np.log(arr)
+    print("log:", result)
+    return result
+f_log()
+print("\n" + "-"*50 + "\n")
+
+def f_abs():
+    print("Removes negative signs from values.")
+    print("Returns only the magnitude of each element.")
+
+    arr = np.array([-3, -1, 0, 2, 5])
+    result = np.abs(arr)
+    print("absolute:", result)
+    return result
+f_abs()
+print("\n" + "-"*50 + "\n")
+
+def f_round():
+    print("Rounds decimal values to required precision.")
+    print("Here values are rounded to 2 decimal places.")
+
+    arr = np.array([1.23456, 2.34567, 3.45678])
+    result = np.round(arr, 2)
+    print("rounded:", result)
+    return result
+f_round()
+print("\n" + "-"*50 + "\n")
+
+def f_power():
+    print("Raises each element to a given power.")
+    print("Here every number is squared.")
+
+    arr = np.array([1, 2, 3, 4])
+    result = np.power(arr, 2)
+    print("power:", result)
+    return result
+f_power()
+print("\n" + "-"*50 + "\n")
