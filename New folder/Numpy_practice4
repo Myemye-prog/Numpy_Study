@@ -1,0 +1,87 @@
+#T
+arr = np.arange(24).reshape(2 , 12)
+print("original shape:", arr.shape)
+print(arr)
+print()
+print(arr.T)
+print()
+
+
+
+
+#transpose()
+arr = np.arange(24).reshape(2, 3, 4)
+print("original shape:", arr.shape)
+result = np.transpose(arr, axes=(1, 0, 2))
+print("transposed shape (axes swapped 0<->1):", result.shape)
+
+#swapaxes()
+arr = np.arange(12).reshape(3, 4)
+print("original:\n", arr)
+result=np.swapaxes(arr,0,1)
+print("swapaxes(0,1):\n", result)
+
+
+#resize()
+arr=np.array((1,2,4,5))
+print("original:", arr)
+arr.resize(2,3)
+print("after resize(2,3) [padded with 0]:\n", arr)
+
+
+#concatenate()
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+result = np.concatenate([a, b])
+print("concatenate([1,2,3],[4,5,6]):", result)
+print()
+
+
+
+a = np.array([[1,2,0],
+              [3,4,0]])
+
+b = np.array([[5,6,10],
+              [7,8,10]])
+
+v = np.vstack([a,b])
+h = np.hstack([a,b])
+s = np.stack([a,b])
+
+#stack()
+print()
+print("stake",s.shape)
+print(s)
+
+#vstake()
+print()
+print("vstake",v.shape)
+print(v)
+
+#hstake()
+print()
+print("hstake",h.shape)
+print(h)
+print()
+
+#split()
+arr=np.arange(9)
+result=np.split(arr,3)
+print(result)
+print(type(result))
+print(type(result[0]))
+result=np.array(np.split(arr,3))
+print(result)
+print()
+
+#expand_dims()
+arr = np.array([1, 2, 3])
+print("normal array",arr)
+result = np.expand_dims(arr, axis=0)
+print("Expanded array",result)
+print("original shape:", arr.shape, "-> after expand_dims(axis=0):",result.shape)
+
+
+
+
+
