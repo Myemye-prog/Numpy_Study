@@ -1,0 +1,79 @@
+import numpy as np
+
+s = np.array([
+    [5, 3, 4, 6, 7, 8, 9, 1, 2],
+    [6, 7, 2, 1, 9, 5, 3, 4, 8],
+    [1, 9, 8, 3, 4, 2, 5, 6, 7],
+    [8, 5, 9, 7, 6, 1, 4, 2, 3],
+    [4, 2, 6, 8, 5, 3, 7, 9, 1],
+    [7, 1, 3, 9, 2, 4, 8, 5, 6],
+    [9, 6, 1, 5, 3, 7, 2, 8, 4],
+    [2, 8, 7, 4, 1, 9, 6, 3, 5],
+    [3, 4, 5, 2, 8, 6, 1, 7, 9]
+])
+
+
+# Print the entire Sudoku board.
+print("Original Sudoku:")
+print(s)
+
+# # Print the first row.
+# print(s[0])
+# # Print the fifth row.
+# print(s[4])
+# # Print the last row using negative indexing.
+# print(s[-1])
+# # Print the first three rows.
+# print(s[0:3])
+# # Print the first five rows.
+# print(s[0:5])
+# # Print all rows from the sixth row to the end.
+# print(s[5:])
+# # Print the complete board using slicing.
+# print(s[:])
+# # Print the first column.
+# print(s[:,0])
+# Print the third column.
+# print(s[:,2])
+# Print the last column.
+# print(s[:,-1])
+# Print the first three columns.
+# print(s[:,0:3])
+# Print columns 4 to 6.
+# print(s[:,3:6])
+# Print the top-left 3×3 Sudoku block.
+# print(s[0:3,0:3])
+# Print the center 3×3 Sudoku block.
+# print(s[3:6,3:6])
+# Print the bottom-right 3×3 Sudoku block.
+# print(s[-3:,-3:])
+# Print every second row.
+# print(s[::2])
+# Print every second column.
+# print(s[:,::2])
+# Print every alternate row and every alternate column.
+# print(s[::2,::2])
+# Reverse the order of all rows.
+# print(s[-1::-1])
+# Reverse the order of all columns.
+# print(s[:,-1::-1])
+# Reverse both rows and columns (rotate the board by 180°).
+
+# Print the last three rows.
+# Print the last three columns.
+# Print the bottom-right 3×3 block using negative slicing.
+# Print rows from index 1 to 7 with a step of 2 and columns from index 2 to 8 with a step of 3.
+# Print every third row and every third column.
+# Create a copy of the Sudoku board.
+# Replace the first row of the copied board with zeros.
+# Replace the first column of the copied board with -1.
+# Replace the center 3×3 block with zeros.
+# Replace the last row with the numbers 1 to 9.
+# Replace the last column with zeros.
+# Print only the four corner elements of the Sudoku board.
+# Print the main diagonal.
+# Print the secondary (anti-) diagonal.
+# Print all even-indexed rows.
+# Print all odd-indexed columns.
+# Extract the middle five rows and middle five columns.
+# Print the shape, number of dimensions, size, and data type of the Sudoku array.
